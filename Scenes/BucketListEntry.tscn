@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://qkk7mpgusq2g"]
+[gd_scene load_steps=2 format=3 uid="uid://qkk7mpgusq2g"]
+
+[ext_resource type="Script" path="res://Scenes/BucketListEntry.cs" id="1_rk5mc"]
 
 [node name="BucketListEntry" type="Control"]
 custom_minimum_size = Vector2(300, 25)
@@ -14,11 +16,17 @@ offset_right = 150.0
 offset_bottom = 12.5
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_rk5mc")
 
 [node name="Polygon2D" type="Polygon2D" parent="."]
 color = Color(0, 0, 0, 1)
 antialiased = true
 polygon = PackedVector2Array(0, 0, 300, 0, 300, 25, 0, 25)
+
+[node name="Line2D" type="Line2D" parent="Polygon2D"]
+position = Vector2(0, 24.5)
+points = PackedVector2Array(0, 0, 300, 0)
+width = 1.0
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 0
@@ -26,8 +34,5 @@ offset_left = 6.0
 offset_right = 300.0
 offset_bottom = 25.0
 theme_override_font_sizes/font_size = 15
-text = "test"
 vertical_alignment = 1
 max_lines_visible = 1
-visible_characters = 35
-visible_ratio = 8.75
