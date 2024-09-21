@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://qkk7mpgusq2g"]
 
-[ext_resource type="Script" path="res://Scenes/BucketListEntry.cs" id="1_rk5mc"]
+[ext_resource type="Script" path="res://Scenes/BucketListEntry/BucketListEntry.cs" id="1_rk5mc"]
 
 [node name="BucketListEntry" type="Control"]
 custom_minimum_size = Vector2(300, 25)

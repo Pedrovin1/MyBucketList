@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://br1hcvr3rcdqm"]
 
 [ext_resource type="Script" path="res://Scenes/Telas/MainScreen/InputHandler_MainScreen.cs" id="1_12bet"]
-[ext_resource type="PackedScene" uid="uid://qkk7mpgusq2g" path="res://Scenes/BucketListEntry.tscn" id="1_maby1"]
-[ext_resource type="PackedScene" uid="uid://c30m5jnhyan8m" path="res://Scenes/Message_TextBar.tscn" id="2_4yhmt"]
+[ext_resource type="PackedScene" uid="uid://qkk7mpgusq2g" path="res://Scenes/BucketListEntry/BucketListEntry.tscn" id="1_maby1"]
+[ext_resource type="PackedScene" uid="uid://c30m5jnhyan8m" path="res://Scenes/TextBar/Message_TextBar.tscn" id="2_4yhmt"]
 [ext_resource type="Script" path="res://Scenes/Telas/MainScreen/BucketEntriesManager.cs" id="2_6441n"]
 
 [node name="MainScreen" type="Control"]

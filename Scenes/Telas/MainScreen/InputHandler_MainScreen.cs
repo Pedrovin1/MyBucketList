@@ -8,6 +8,17 @@ public partial class InputHandler_MainScreen : Node
     public delegate void SelecionarItemSucessorEventHandler(int movimentacao);
     [Signal]
     public delegate void SelecionarItemAntecessorEventHandler(int movimentacao);
+    [Signal]
+    public delegate void AtivarModoCriarBucketListItemEventHandler();
+
+    private enum ModosManipulacaoLista
+    {
+        Default,
+        Edicao
+    }
+
+    ModosManipulacaoLista modoManipulacaoAtual = ModosManipulacaoLista.Default;
+
     public override void _Ready()
     {
         GetNode<InputManager>("/root/InputManager").TeclaContextualPressionada += this.onTeclaContextualPressionada;
@@ -16,13 +27,16 @@ public partial class InputHandler_MainScreen : Node
     public void onTeclaContextualPressionada(InputEvent @event)
     {
         InputEventKey tecla = @event as InputEventKey;
-        switch(tecla.AsTextKeycode())
+        switch(tecla.AsTextKeyLabel())
         {
-            case "Up": this.EmitSignal(SignalName.SelecionarItemAntecessor, 1); break;; //need to make an enum
+            case "Up": this.EmitSignal(SignalName.SelecionarItemAntecessor, 1); break;
             case "Down": this.EmitSignal(SignalName.SelecionarItemSucessor, 1); break;
             case "Enter": break;
             case "Tab": break;
-            case "Space": break;
+            case "Space":
+                modoManipulacaoAtual = ModosManipulacaoLista.Edicao; 
+                this.EmitSignal(SignalName.AtivarModoCriarBucketListItem);
+                break;
 
             default: break;
         }

@@ -6,24 +6,30 @@ using System.Runtime.InteropServices;
 public partial class BucketEntriesManager : Node
 {
     VBoxContainer vboxComponentsList;
-    int listIndexFirstVisibleBucketItem = 0;
+    int listIndexFirstVisibleBucketItem = -1;
     int vboxIndexSelectedItem = 0;
     BucketListEntry selectedBucketItem = null;
     int maxEntriesPerScreen = 6; //mudar dps
 
-    List<string> dummyData = new List<string>{"1","2","13951"};//,"17999","14545","133","1444","17777","1333","1444","5451","11111","1123"
+    List<string> dummyData = new List<string>();//{"1","2","13951"};//,"17999","14545","133","1444","17777","1333","1444","5451","11111","1123"
 
     public override void _Ready()
     {
         vboxComponentsList = GetNode<VBoxContainer>("../CanvasLayer/VBoxContainer");
         GetNode<InputHandler_MainScreen>("/root/MainScreen/InputHandler").SelecionarItemSucessor += this.onSelecionarItemSucessor;
         GetNode<InputHandler_MainScreen>("/root/MainScreen/InputHandler").SelecionarItemAntecessor += this.onSelecionarItemAntecessor;
-
-        this.updateVisibleBucketEntries(listIndexFirstVisibleBucketItem);
+    
+        if(dummyData.Count > 0)
+        {
+            listIndexFirstVisibleBucketItem = 0;
+            this.updateVisibleBucketEntries(listIndexFirstVisibleBucketItem);
+        }
     }
 
     private void onSelecionarItemSucessor(int movimentacao = 0)
     {
+        if(dummyData.Count <= 0){ return; }
+
         if(selectedBucketItem != null )
         {
             selectedBucketItem.deselecionarItem();
@@ -56,6 +62,8 @@ public partial class BucketEntriesManager : Node
     }
     private void onSelecionarItemAntecessor(int movimentacao = 0)
     {
+        if(dummyData.Count <= 0){ return; }
+
         if(selectedBucketItem != null )
         {
             selectedBucketItem.deselecionarItem();
@@ -79,7 +87,6 @@ public partial class BucketEntriesManager : Node
         
     }
 
-//implementar verificação de estouro da lista
     private void updateVisibleBucketEntries(int listIndexInicial)
     {
         const int OFFSET = 1;
