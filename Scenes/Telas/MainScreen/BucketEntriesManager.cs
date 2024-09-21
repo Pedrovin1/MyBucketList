@@ -16,9 +16,11 @@ public partial class BucketEntriesManager : Node
     public override void _Ready()
     {
         vboxComponentsList = GetNode<VBoxContainer>("../CanvasLayer/VBoxContainer");
-        GetNode<InputHandler_MainScreen>("/root/MainScreen/InputHandler").SelecionarItemSucessor += this.onSelecionarItemSucessor;
-        GetNode<InputHandler_MainScreen>("/root/MainScreen/InputHandler").SelecionarItemAntecessor += this.onSelecionarItemAntecessor;
-    
+        var inputHandlerComponent = GetNode<InputHandler_MainScreen>("/root/MainScreen/InputHandler");
+        inputHandlerComponent.SelecionarItemSucessor += this.onSelecionarItemSucessor;
+        inputHandlerComponent.SelecionarItemAntecessor += this.onSelecionarItemAntecessor;
+        inputHandlerComponent.AdicionarNovoBucketItem += this.onAdicionarNovoBucketItem;
+
         if(dummyData.Count > 0)
         {
             listIndexFirstVisibleBucketItem = 0;
@@ -106,6 +108,23 @@ public partial class BucketEntriesManager : Node
         {
             currentBucketItem = vboxComponentsList.GetChild<BucketListEntry>(i + OFFSET);
             currentBucketItem.alterarTexto(newItemsRange[i]);
+        }
+    }
+
+    private void onAdicionarNovoBucketItem()
+    {
+        Message_TextBar textBar = vboxComponentsList.GetChild<Message_TextBar>(vboxComponentsList.GetChildCount() - 1);
+        string textNewBucketItem = textBar.currentText.ToString().Trim();
+
+        textBar.ExibirMensagem("Item Inválido!", Colors.Yellow);
+
+        if(textNewBucketItem != null && textNewBucketItem != string.Empty)
+        {
+            dummyData.Add(textNewBucketItem);
+            textBar.ExibirMensagem("Item Adicionado Com Sucesso!", Colors.Green);
+
+            if(listIndexFirstVisibleBucketItem < 0){ listIndexFirstVisibleBucketItem = 0; }
+            updateVisibleBucketEntries(listIndexFirstVisibleBucketItem);
         }
     }
 

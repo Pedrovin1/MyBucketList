@@ -4,19 +4,34 @@ using System.Text;
 
 public partial class Message_TextBar : Control
 {
-    StringBuilder currentText = new();
-    Label textLabel;
+    public StringBuilder currentText {get; private set;}= new();
+    private Label textLabel;
 
     public override void _Ready()
     {
         textLabel = (Label)FindChild("Label");
-        GetNode<InputHandler_MainScreen>("/root/MainScreen/InputHandler").AtivarModoCriarBucketListItem += this.AtivarModoCriarItem;
+        GetNode<InputHandler_MainScreen>("/root/MainScreen/InputHandler").AtivarModoCriarBucketListItem += this.onAtivarModoCriarItem;
+        GetNode<InputHandler_MainScreen>("/root/MainScreen/InputHandler").DesativarModoCriarBucketListItem += this.onDesativarModoCriarItem;
         this.SetProcessInput(false);
     }
 
-    public void AtivarModoCriarItem()
+    public void onAtivarModoCriarItem()
     {
         this.SetProcessInput(true);
+        textLabel.Text = currentText.ToString();
+        textLabel.RemoveThemeColorOverride("font_color");
+    }
+    public void onDesativarModoCriarItem()
+    {
+        this.SetProcessInput(false);
+        this.currentText.Clear();
+    }
+
+    public void ExibirMensagem(string text, Color cor)
+    {
+        textLabel.RemoveThemeColorOverride("font_color");
+        textLabel.AddThemeColorOverride("font_color", cor);
+        textLabel.Text = text;
     }
 
     public override void _Input(InputEvent @event)
