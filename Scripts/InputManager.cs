@@ -8,7 +8,8 @@ public partial class InputManager : Node
 
     public override void _Input(InputEvent @event)
     {
-        if (@event.IsActionReleased("SetaCima") ||
+        if (@event.IsActionReleased("Esc") ||
+            @event.IsActionReleased("SetaCima") ||
             @event.IsActionReleased("SetaBaixo") ||
             @event.IsActionReleased("Espaco") ||
             @event.IsActionReleased("Enter") ||

@@ -15,12 +15,20 @@ public partial class InputHandler_MainScreen : Node
     public delegate void DesativarModoCriarBucketListItemEventHandler();
 
     [Signal]
+    public delegate void AtivarModoConfirmacaoDecisaoEventHandler(string mensagem);
+    [Signal]
+    public delegate void ConfirmacaoEscolhidaEventHandler(bool confirmar);
+
+    [Signal]
     public delegate void AdicionarNovoBucketItemEventHandler();
+    [Signal]
+    public delegate void RemoverBucketItemEventHandler();
 
     private enum ModosManipulacaoLista
     {
         Default,
-        Edicao
+        Edicao,
+        Confirmacao
     }
 
     ModosManipulacaoLista modoManipulacaoAtual = ModosManipulacaoLista.Default;
@@ -35,13 +43,27 @@ public partial class InputHandler_MainScreen : Node
         InputEventKey tecla = @event as InputEventKey;
         switch(tecla.AsTextKeyLabel())
         {
+            case "Escape": 
+                switch (modoManipulacaoAtual)
+                {
+                    case ModosManipulacaoLista.Default: break; //salvar e sair da aplicação
+                    case ModosManipulacaoLista.Edicao:
+                        this.EmitSignal(SignalName.ConfirmacaoEscolhida, false);
+                        modoManipulacaoAtual = ModosManipulacaoLista.Default;
+                        break;
+                    case ModosManipulacaoLista.Confirmacao: 
+                        this.EmitSignal(SignalName.ConfirmacaoEscolhida, false);
+                    break;
+                }
+                break;
+
             case "Up": this.EmitSignal(SignalName.SelecionarItemAntecessor, 1); break;
             case "Down": this.EmitSignal(SignalName.SelecionarItemSucessor, 1); break;
 
             case "Enter": 
                 switch(modoManipulacaoAtual)
                 {
-                    case ModosManipulacaoLista.Default: break; //To implement
+                    case ModosManipulacaoLista.Default: break; //acessar detalhes do item
                     case ModosManipulacaoLista.Edicao:
                         this.EmitSignal(SignalName.AdicionarNovoBucketItem);
                         this.EmitSignal(SignalName.DesativarModoCriarBucketListItem);
@@ -50,7 +72,12 @@ public partial class InputHandler_MainScreen : Node
                 }
                 break;
 
-            case "Tab": break;
+            case "Tab": 
+                if(modoManipulacaoAtual == ModosManipulacaoLista.Default)
+                {
+                    this.EmitSignal(SignalName.RemoverBucketItem);
+                }
+                break;
             case "Space":
                 modoManipulacaoAtual = ModosManipulacaoLista.Edicao; 
                 this.EmitSignal(SignalName.AtivarModoCriarBucketListItem);

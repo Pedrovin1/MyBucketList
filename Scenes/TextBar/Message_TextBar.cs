@@ -10,8 +10,13 @@ public partial class Message_TextBar : Control
     public override void _Ready()
     {
         textLabel = (Label)FindChild("Label");
-        GetNode<InputHandler_MainScreen>("/root/MainScreen/InputHandler").AtivarModoCriarBucketListItem += this.onAtivarModoCriarItem;
-        GetNode<InputHandler_MainScreen>("/root/MainScreen/InputHandler").DesativarModoCriarBucketListItem += this.onDesativarModoCriarItem;
+
+        var inputHandlerComponent = GetNode<InputHandler_MainScreen>("/root/MainScreen/InputHandler");
+        inputHandlerComponent.AtivarModoCriarBucketListItem += this.onAtivarModoCriarItem;
+        inputHandlerComponent.DesativarModoCriarBucketListItem += this.onDesativarModoCriarItem;
+        // inputHandler.AtivarModoConfirmacaoDecisao
+        inputHandlerComponent.ConfirmacaoEscolhida += this.onConfirmacaoEscolhida;
+
         this.SetProcessInput(false);
     }
 
@@ -32,6 +37,16 @@ public partial class Message_TextBar : Control
         textLabel.RemoveThemeColorOverride("font_color");
         textLabel.AddThemeColorOverride("font_color", cor);
         textLabel.Text = text;
+    }
+
+    public void onConfirmacaoEscolhida(bool confirmar)
+    {
+        if(!confirmar)
+        {
+            this.onDesativarModoCriarItem();
+            textLabel.Text = currentText.ToString();
+            textLabel.RemoveThemeColorOverride("font_color");
+        }
     }
 
     public override void _Input(InputEvent @event)

@@ -9,7 +9,7 @@ public partial class BucketEntriesManager : Node
     int listIndexFirstVisibleBucketItem = -1;
     int vboxIndexSelectedItem = 0;
     BucketListEntry selectedBucketItem = null;
-    int maxEntriesPerScreen = 6; //mudar dps
+    int maxEntriesPerScreen = 6;
 
     List<string> dummyData = new List<string>();//{"1","2","13951"};//,"17999","14545","133","1444","17777","1333","1444","5451","11111","1123"
 
@@ -20,6 +20,7 @@ public partial class BucketEntriesManager : Node
         inputHandlerComponent.SelecionarItemSucessor += this.onSelecionarItemSucessor;
         inputHandlerComponent.SelecionarItemAntecessor += this.onSelecionarItemAntecessor;
         inputHandlerComponent.AdicionarNovoBucketItem += this.onAdicionarNovoBucketItem;
+        inputHandlerComponent.RemoverBucketItem += this.onRemoverBucketItem;
 
         if(dummyData.Count > 0)
         {
@@ -94,6 +95,18 @@ public partial class BucketEntriesManager : Node
         const int OFFSET = 1;
         List<string> newItemsRange;
 
+        BucketListEntry currentBucketItem; //clears the text of all eentries, to then update them
+        for(int i = 0; i < maxEntriesPerScreen; i++)
+        {
+            currentBucketItem = vboxComponentsList.GetChild<BucketListEntry>(i + OFFSET);
+            currentBucketItem.alterarTexto(string.Empty);
+        }
+
+        if(listIndexInicial == -1)
+        {
+            return;
+        }
+
         if(dummyData.Count < maxEntriesPerScreen)
         {
             newItemsRange = dummyData.GetRange(listIndexInicial, dummyData.Count);
@@ -103,7 +116,6 @@ public partial class BucketEntriesManager : Node
             newItemsRange = dummyData.GetRange(listIndexInicial, maxEntriesPerScreen);
         }
   
-        BucketListEntry currentBucketItem;
         for(int i = 0; i < newItemsRange.Count; i++)
         {
             currentBucketItem = vboxComponentsList.GetChild<BucketListEntry>(i + OFFSET);
@@ -126,6 +138,23 @@ public partial class BucketEntriesManager : Node
             if(listIndexFirstVisibleBucketItem < 0){ listIndexFirstVisibleBucketItem = 0; }
             updateVisibleBucketEntries(listIndexFirstVisibleBucketItem);
         }
+    }
+
+    private void onRemoverBucketItem() //to implement: confirmation
+    {
+        const int OFFSET = 1;
+        int listIndexSelectedItem = listIndexFirstVisibleBucketItem + (vboxIndexSelectedItem - OFFSET);
+
+        if(vboxIndexSelectedItem > 0 && listIndexSelectedItem < dummyData.Count)
+        {
+            dummyData.RemoveAt(listIndexSelectedItem);
+            if(dummyData.Count <= 0)
+            {
+                this.listIndexFirstVisibleBucketItem = -1;
+            }
+        }
+
+        this.updateVisibleBucketEntries(listIndexFirstVisibleBucketItem);
     }
 
 
