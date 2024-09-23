@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://c30m5jnhyan8m"]
+[gd_scene load_steps=3 format=3 uid="uid://c30m5jnhyan8m"]
 
 [ext_resource type="Script" path="res://Scenes/TextBar/Message_TextBar.cs" id="1_is1pd"]
+[ext_resource type="Script" path="res://Scenes/TextBar/BlinkingComponent.cs" id="2_p28hu"]
 
 [node name="Message_TextBar" type="Control"]
 custom_minimum_size = Vector2(300, 25)
@@ -27,3 +28,16 @@ horizontal_alignment = 1
 vertical_alignment = 1
 text_overrun_behavior = 1
 max_lines_visible = 1
+
+[node name="BlinkingRectangle" type="Line2D" parent="."]
+visible = false
+position = Vector2(299, 5)
+scale = Vector2(1, 0.965013)
+points = PackedVector2Array(1, -4.5, 1, 19, -298, 19, -298, -4, 1, -4)
+width = 1.0
+script = ExtResource("2_p28hu")
+
+[node name="Timer" type="Timer" parent="BlinkingRectangle"]
+wait_time = 0.65
+
+[connection signal="timeout" from="BlinkingRectangle/Timer" to="BlinkingRectangle" method="_on_timer_timeout"]

@@ -22,6 +22,11 @@ public partial class BucketEntriesManager : Node
         inputHandlerComponent.AdicionarNovoBucketItem += this.onAdicionarNovoBucketItem;
         inputHandlerComponent.RemoverBucketItem += this.onRemoverBucketItem;
 
+        var messageTextBar = GetNode<Message_TextBar>("/root/MainScreen/CanvasLayer/VBoxContainer/Message_TextBar");
+        inputHandlerComponent.AtivarModoCriarBucketListItem += messageTextBar.onAtivarModoDigitacao;
+        inputHandlerComponent.DesativarModoCriarBucketListItem += messageTextBar.onDesativarModoCriarItem;
+        inputHandlerComponent.ConfirmacaoEscolhida += messageTextBar.onConfirmacaoEscolhida;
+
         if(dummyData.Count > 0)
         {
             listIndexFirstVisibleBucketItem = 0;

@@ -4,31 +4,29 @@ using System.Text;
 
 public partial class Message_TextBar : Control
 {
-    public StringBuilder currentText {get; private set;}= new();
+    public StringBuilder currentText {get; private set;} = new();
     private Label textLabel;
+    private BlinkingComponent blinkingRectangle;
 
     public override void _Ready()
     {
         textLabel = (Label)FindChild("Label");
-
-        var inputHandlerComponent = GetNode<InputHandler_MainScreen>("/root/MainScreen/InputHandler");
-        inputHandlerComponent.AtivarModoCriarBucketListItem += this.onAtivarModoCriarItem;
-        inputHandlerComponent.DesativarModoCriarBucketListItem += this.onDesativarModoCriarItem;
-        // inputHandler.AtivarModoConfirmacaoDecisao
-        inputHandlerComponent.ConfirmacaoEscolhida += this.onConfirmacaoEscolhida;
+        blinkingRectangle = (BlinkingComponent)FindChild("BlinkingRectangle");
 
         this.SetProcessInput(false);
     }
 
-    public void onAtivarModoCriarItem()
+    public void onAtivarModoDigitacao()
     {
         this.SetProcessInput(true);
+        blinkingRectangle.ativarBlinking();
         textLabel.Text = currentText.ToString();
         textLabel.RemoveThemeColorOverride("font_color");
     }
     public void onDesativarModoCriarItem()
     {
         this.SetProcessInput(false);
+        blinkingRectangle.desativarBlinking();
         this.currentText.Clear();
     }
 
