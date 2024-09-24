@@ -7,21 +7,41 @@ public partial class Message_TextBar : Control
     public StringBuilder currentText {get; private set;} = new();
     private Label textLabel;
     private BlinkingComponent blinkingRectangle;
+    private Polygon2D polygon;
 
     public override void _Ready()
     {
         textLabel = (Label)FindChild("Label");
         blinkingRectangle = (BlinkingComponent)FindChild("BlinkingRectangle");
+        polygon = (Polygon2D)FindChild("Polygon2D");
 
         this.SetProcessInput(false);
+    }
+
+    public void destacarComponente()
+    {
+        textLabel.RemoveThemeColorOverride("font_color");
+        textLabel.AddThemeColorOverride("font_color", Colors.Black);
+        polygon.Color = Colors.White;
+    }
+
+    public void removerDestaque()
+    {
+        textLabel.RemoveThemeColorOverride("font_color");
+        textLabel.AddThemeColorOverride("font_color", Colors.White);
+        polygon.Color = Colors.Black;
     }
 
     public void onAtivarModoDigitacao()
     {
         this.SetProcessInput(true);
+
         blinkingRectangle.ativarBlinking();
+
         textLabel.Text = currentText.ToString();
         textLabel.RemoveThemeColorOverride("font_color");
+
+        polygon.Color = Colors.Black;
     }
     public void onDesativarModoCriarItem()
     {

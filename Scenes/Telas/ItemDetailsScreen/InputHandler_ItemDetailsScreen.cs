@@ -3,6 +3,19 @@ using System;
 
 public partial class InputHandler_ItemDetailsScreen : Node
 {
+    [Signal]
+    public delegate void SelecionarItemSucessorEventHandler(int movimentacao);
+    [Signal]
+    public delegate void SelecionarItemAntecessorEventHandler(int movimentacao);
+
+    private enum ModosManipulacaoLista
+    {
+        Default,
+        Edicao,
+        Confirmacao
+    }
+
+    ModosManipulacaoLista modoManipulacaoAtual = ModosManipulacaoLista.Default;
     public override void _Ready()
     {
         GetNode<InputManager>("/root/InputManager").TeclaContextualPressionada += this.onTeclaContextualPressionada;
@@ -14,8 +27,18 @@ public partial class InputHandler_ItemDetailsScreen : Node
         switch(tecla.AsTextKeyLabel())
         {
             case "Escape":break;
-            case "Up": break;
-            case "Down":break;
+            case "Up": 
+                if(modoManipulacaoAtual == ModosManipulacaoLista.Default)
+                {
+                    this.EmitSignal(SignalName.SelecionarItemAntecessor);
+                }
+                break;
+            case "Down":
+                if(modoManipulacaoAtual == ModosManipulacaoLista.Default)
+                {
+                    this.EmitSignal(SignalName.SelecionarItemSucessor);
+                }
+                break;
             case "Enter": break;
             case "Tab": break;
             case "Space":break;

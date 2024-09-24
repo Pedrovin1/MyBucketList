@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://4lviyeydc2hc"]
+[gd_scene load_steps=6 format=3 uid="uid://4lviyeydc2hc"]
 
 [ext_resource type="PackedScene" uid="uid://c30m5jnhyan8m" path="res://Scenes/TextBar/Message_TextBar.tscn" id="1_2qfj7"]
 [ext_resource type="Script" path="res://Scenes/Telas/ItemDetailsScreen/ItemDetailsScreen.cs" id="1_531bo"]
+[ext_resource type="Script" path="res://Scenes/Telas/ItemDetailsScreen/InputHandler_ItemDetailsScreen.cs" id="2_3tuon"]
 [ext_resource type="PackedScene" uid="uid://qkk7mpgusq2g" path="res://Scenes/BucketListEntry/BucketListEntry.tscn" id="2_kqtk8"]
+[ext_resource type="Script" path="res://Scenes/Telas/ItemDetailsScreen/ComponentsManager_ItemDetailsScreen.cs" id="2_lrvdy"]
 
 [node name="ItemDetailsScreen" type="Control"]
 layout_mode = 3
@@ -14,6 +16,10 @@ grow_vertical = 2
 script = ExtResource("1_531bo")
 
 [node name="InputHandler" type="Node" parent="."]
+script = ExtResource("2_3tuon")
+
+[node name="ComponentsManager" type="Node" parent="."]
+script = ExtResource("2_lrvdy")
 
 [node name="Polygon2D" type="Polygon2D" parent="."]
 color = Color(0, 0, 0, 1)
