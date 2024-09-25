@@ -8,14 +8,18 @@ public partial class InputHandler_ItemDetailsScreen : Node
     [Signal]
     public delegate void SelecionarItemAntecessorEventHandler(int movimentacao);
 
+    [Signal]
+    public delegate void SairTelaAtualEventHandler();
+
     private enum ModosManipulacaoLista
     {
         Default,
         Edicao,
-        Confirmacao
+        Confirmacao,
+        Inativo
     }
 
-    ModosManipulacaoLista modoManipulacaoAtual = ModosManipulacaoLista.Default;
+    ModosManipulacaoLista modoManipulacaoAtual = ModosManipulacaoLista.Inativo;
     public override void _Ready()
     {
         GetNode<InputManager>("/root/InputManager").TeclaContextualPressionada += this.onTeclaContextualPressionada;
@@ -23,10 +27,19 @@ public partial class InputHandler_ItemDetailsScreen : Node
 
     public void onTeclaContextualPressionada(InputEvent @event)
     {
+        if(modoManipulacaoAtual == ModosManipulacaoLista.Inativo){ return; }
+
         InputEventKey tecla = @event as InputEventKey;
         switch(tecla.AsTextKeyLabel())
         {
-            case "Escape":break;
+            case "Escape":
+                if (modoManipulacaoAtual == ModosManipulacaoLista.Default)
+                {
+                    //this.EmitSignal(SignalName.)
+                    modoManipulacaoAtual = ModosManipulacaoLista.Inativo;
+                    this.EmitSignal(SignalName.SairTelaAtual);
+                }
+                break;
             case "Up": 
                 if(modoManipulacaoAtual == ModosManipulacaoLista.Default)
                 {
@@ -45,5 +58,10 @@ public partial class InputHandler_ItemDetailsScreen : Node
 
             default: break;
         }
+    }
+
+    public void Ativar()
+    {
+        modoManipulacaoAtual = ModosManipulacaoLista.Default;
     }
 }

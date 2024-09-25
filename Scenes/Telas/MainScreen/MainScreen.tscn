@@ -1,55 +1,67 @@
-[gd_scene load_steps=5 format=3 uid="uid://br1hcvr3rcdqm"]
+[gd_scene load_steps=7 format=3 uid="uid://br1hcvr3rcdqm"]
 
 [ext_resource type="Script" path="res://Scenes/Telas/MainScreen/InputHandler_MainScreen.cs" id="1_12bet"]
+[ext_resource type="Script" path="res://Scenes/Telas/MainScreen/MainScreen.cs" id="1_b807u"]
 [ext_resource type="PackedScene" uid="uid://qkk7mpgusq2g" path="res://Scenes/BucketListEntry/BucketListEntry.tscn" id="1_maby1"]
 [ext_resource type="PackedScene" uid="uid://c30m5jnhyan8m" path="res://Scenes/TextBar/Message_TextBar.tscn" id="2_4yhmt"]
 [ext_resource type="Script" path="res://Scenes/Telas/MainScreen/BucketEntriesManager.cs" id="2_6441n"]
+[ext_resource type="PackedScene" uid="uid://4lviyeydc2hc" path="res://Scenes/Telas/ItemDetailsScreen/ItemDetailsScreen.tscn" id="6_g61ru"]
 
-[node name="MainScreen" type="Control"]
+[node name="Node" type="Node"]
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color(0, 0, 0, 1)
+polygon = PackedVector2Array(0, 0, 300, 0, 300, 200, 0, 200)
+
+[node name="MainScreen" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_b807u")
 
-[node name="InputHandler" type="Node" parent="."]
+[node name="InputHandler" type="Node" parent="MainScreen"]
 script = ExtResource("1_12bet")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="CanvasLayer" type="CanvasLayer" parent="MainScreen"]
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MainScreen/CanvasLayer"]
 custom_minimum_size = Vector2(300, 200)
 offset_right = 40.0
 offset_bottom = 40.0
 theme_override_constants/separation = 0
 
-[node name="Title" parent="CanvasLayer/VBoxContainer" instance=ExtResource("1_maby1")]
+[node name="Title" parent="MainScreen/CanvasLayer/VBoxContainer" instance=ExtResource("1_maby1")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="BucketListEntry2" parent="CanvasLayer/VBoxContainer" instance=ExtResource("1_maby1")]
+[node name="BucketListEntry2" parent="MainScreen/CanvasLayer/VBoxContainer" instance=ExtResource("1_maby1")]
 layout_mode = 2
 
-[node name="BucketListEntry3" parent="CanvasLayer/VBoxContainer" instance=ExtResource("1_maby1")]
+[node name="BucketListEntry3" parent="MainScreen/CanvasLayer/VBoxContainer" instance=ExtResource("1_maby1")]
 layout_mode = 2
 
-[node name="BucketListEntry4" parent="CanvasLayer/VBoxContainer" instance=ExtResource("1_maby1")]
+[node name="BucketListEntry4" parent="MainScreen/CanvasLayer/VBoxContainer" instance=ExtResource("1_maby1")]
 layout_mode = 2
 
-[node name="BucketListEntry5" parent="CanvasLayer/VBoxContainer" instance=ExtResource("1_maby1")]
+[node name="BucketListEntry5" parent="MainScreen/CanvasLayer/VBoxContainer" instance=ExtResource("1_maby1")]
 layout_mode = 2
 
-[node name="BucketListEntry6" parent="CanvasLayer/VBoxContainer" instance=ExtResource("1_maby1")]
+[node name="BucketListEntry6" parent="MainScreen/CanvasLayer/VBoxContainer" instance=ExtResource("1_maby1")]
 layout_mode = 2
 
-[node name="BucketListEntry7" parent="CanvasLayer/VBoxContainer" instance=ExtResource("1_maby1")]
+[node name="BucketListEntry7" parent="MainScreen/CanvasLayer/VBoxContainer" instance=ExtResource("1_maby1")]
 layout_mode = 2
 
-[node name="Message_TextBar" parent="CanvasLayer/VBoxContainer" instance=ExtResource("2_4yhmt")]
+[node name="Message_TextBar" parent="MainScreen/CanvasLayer/VBoxContainer" instance=ExtResource("2_4yhmt")]
 layout_mode = 2
 
-[node name="BucketEntriesManager" type="Node" parent="."]
+[node name="BucketEntriesManager" type="Node" parent="MainScreen"]
 script = ExtResource("2_6441n")
 
-[connection signal="ready" from="CanvasLayer/VBoxContainer/Title" to="BucketEntriesManager" method="_on_title_ready"]
+[node name="ItemDetailsScreen" parent="." instance=ExtResource("6_g61ru")]
+
+[connection signal="ready" from="MainScreen/CanvasLayer/VBoxContainer/Title" to="MainScreen/BucketEntriesManager" method="_on_title_ready"]
+[connection signal="ready" from="ItemDetailsScreen" to="MainScreen" method="_on_item_details_screen_ready"]

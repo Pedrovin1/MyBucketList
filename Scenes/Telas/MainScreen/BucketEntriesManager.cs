@@ -8,40 +8,43 @@ public partial class BucketEntriesManager : Node
     VBoxContainer vboxComponentsList;
     int listIndexFirstVisibleBucketItem = -1;
     int vboxIndexSelectedItem = 0;
-    BucketListEntry selectedBucketItem = null;
+    BucketListEntry selectedBucketEntryItem = null;
     int maxEntriesPerScreen = 6;
-
-    List<string> dummyData = new List<string>{"1","2","13951","1233333","mais cosai", "e mais", "e ainda mais","namoral","palceholer"};//,"17999","14545","133","1444","17777","1333","1444","5451","11111","1123"
 
     public override void _Ready()
     {
         vboxComponentsList = GetNode<VBoxContainer>("../CanvasLayer/VBoxContainer");
-        var inputHandlerComponent = GetNode<InputHandler_MainScreen>("/root/MainScreen/InputHandler");
+        var inputHandlerComponent = GetNode<InputHandler_MainScreen>("/root/Node/MainScreen/InputHandler");
         inputHandlerComponent.SelecionarItemSucessor += this.onSelecionarItemSucessor;
         inputHandlerComponent.SelecionarItemAntecessor += this.onSelecionarItemAntecessor;
         inputHandlerComponent.AdicionarNovoBucketItem += this.onAdicionarNovoBucketItem;
         inputHandlerComponent.RemoverBucketItem += this.onRemoverBucketItem;
 
-        var messageTextBar = GetNode<Message_TextBar>("/root/MainScreen/CanvasLayer/VBoxContainer/Message_TextBar");
+        var messageTextBar = GetNode<Message_TextBar>("/root/Node/MainScreen/CanvasLayer/VBoxContainer/Message_TextBar");
         inputHandlerComponent.AtivarModoCriarBucketListItem += messageTextBar.onAtivarModoDigitacao;
         inputHandlerComponent.DesativarModoCriarBucketListItem += messageTextBar.onDesativarModoCriarItem;
         inputHandlerComponent.ConfirmacaoEscolhida += messageTextBar.onConfirmacaoEscolhida;
 
-        if(dummyData.Count > 0)
+        if(DataManager.bucketItems.Count > 0)
         {
             listIndexFirstVisibleBucketItem = 0;
             this.updateVisibleBucketEntries(listIndexFirstVisibleBucketItem);
         }
     }
 
+    public int getListIndexSelectedItem()
+    {
+        return listIndexFirstVisibleBucketItem + vboxIndexSelectedItem - 1;
+    }
+
     private void onSelecionarItemSucessor(int movimentacao = 0)
     {
-        if(dummyData.Count <= 0){ return; }
+        if(DataManager.bucketItems.Count <= 0){ return; }
 
-        if(selectedBucketItem != null )
+        if(selectedBucketEntryItem != null )
         {
-            selectedBucketItem.deselecionarItem();
-            selectedBucketItem = null;
+            selectedBucketEntryItem.deselecionarItem();
+            selectedBucketEntryItem = null;
         }
 
         vboxIndexSelectedItem += movimentacao;
@@ -50,11 +53,11 @@ public partial class BucketEntriesManager : Node
             vboxIndexSelectedItem = maxEntriesPerScreen;
             listIndexFirstVisibleBucketItem += movimentacao;
 
-            if(listIndexFirstVisibleBucketItem + maxEntriesPerScreen > dummyData.Count)
+            if(listIndexFirstVisibleBucketItem + maxEntriesPerScreen > DataManager.bucketItems.Count)
             {
-                if(dummyData.Count >= maxEntriesPerScreen)
+                if(DataManager.bucketItems.Count >= maxEntriesPerScreen)
                 {
-                    listIndexFirstVisibleBucketItem = dummyData.Count - maxEntriesPerScreen;
+                    listIndexFirstVisibleBucketItem = DataManager.bucketItems.Count - maxEntriesPerScreen;
                 }
                 else
                 {
@@ -65,17 +68,17 @@ public partial class BucketEntriesManager : Node
             updateVisibleBucketEntries(listIndexFirstVisibleBucketItem);
         }
 
-        selectedBucketItem = vboxComponentsList.GetChild<BucketListEntry>(vboxIndexSelectedItem);
-        selectedBucketItem.selecionarItem();
+        selectedBucketEntryItem = vboxComponentsList.GetChild<BucketListEntry>(vboxIndexSelectedItem);
+        selectedBucketEntryItem.selecionarItem();
     }
     private void onSelecionarItemAntecessor(int movimentacao = 0)
     {
-        if(dummyData.Count <= 0){ return; }
+        if(DataManager.bucketItems.Count <= 0){ return; }
 
-        if(selectedBucketItem != null )
+        if(selectedBucketEntryItem != null )
         {
-            selectedBucketItem.deselecionarItem();
-            selectedBucketItem = null;
+            selectedBucketEntryItem.deselecionarItem();
+            selectedBucketEntryItem = null;
         }
 
         vboxIndexSelectedItem -= movimentacao;
@@ -89,8 +92,8 @@ public partial class BucketEntriesManager : Node
         }
         if(vboxIndexSelectedItem > 0)
         {
-            selectedBucketItem = vboxComponentsList.GetChild<BucketListEntry>(vboxIndexSelectedItem);
-            selectedBucketItem.selecionarItem();
+            selectedBucketEntryItem = vboxComponentsList.GetChild<BucketListEntry>(vboxIndexSelectedItem);
+            selectedBucketEntryItem.selecionarItem();
         }
         
     }
@@ -98,7 +101,7 @@ public partial class BucketEntriesManager : Node
     private void updateVisibleBucketEntries(int listIndexInicial)
     {
         const int OFFSET = 1;
-        List<string> newItemsRange;
+        List<BucketItem> newItemsRange;
 
         BucketListEntry currentBucketItem; //clears the text of all entries, to then update them
         for(int i = 0; i < maxEntriesPerScreen; i++)
@@ -109,28 +112,28 @@ public partial class BucketEntriesManager : Node
 
         if(listIndexInicial <= -1)
         {
-            if(selectedBucketItem != null )
+            if(selectedBucketEntryItem != null )
             {
-                selectedBucketItem.deselecionarItem();
-                selectedBucketItem = null;
+                selectedBucketEntryItem.deselecionarItem();
+                selectedBucketEntryItem = null;
                 vboxIndexSelectedItem = 0;
             }
             return;
         }
 
-        if(listIndexInicial + maxEntriesPerScreen > dummyData.Count)
+        if(listIndexInicial + maxEntriesPerScreen > DataManager.bucketItems.Count)
         {
-            newItemsRange = dummyData.GetRange(listIndexInicial, dummyData.Count - listIndexInicial);
+            newItemsRange = DataManager.bucketItems.GetRange(listIndexInicial, DataManager.bucketItems.Count - listIndexInicial);
         }
         else
         {
-            newItemsRange = dummyData.GetRange(listIndexInicial, maxEntriesPerScreen);
+            newItemsRange = DataManager.bucketItems.GetRange(listIndexInicial, maxEntriesPerScreen);
         }
   
         for(int i = 0; i < newItemsRange.Count; i++)
         {
             currentBucketItem = vboxComponentsList.GetChild<BucketListEntry>(i + OFFSET);
-            currentBucketItem.alterarTexto(newItemsRange[i]);
+            currentBucketItem.alterarTexto(newItemsRange[i].nome);
         }
     }
 
@@ -143,7 +146,7 @@ public partial class BucketEntriesManager : Node
 
         if(textNewBucketItem != null && textNewBucketItem != string.Empty)
         {
-            dummyData.Add(textNewBucketItem);
+            DataManager.bucketItems.Add(new BucketItem(textNewBucketItem));
             textBar.ExibirMensagem("Item Adicionado Com Sucesso!", Colors.Green);
 
             if(listIndexFirstVisibleBucketItem < 0){ listIndexFirstVisibleBucketItem = 0; }
@@ -156,12 +159,12 @@ public partial class BucketEntriesManager : Node
         const int OFFSET = 1;
         int listIndexSelectedItem = listIndexFirstVisibleBucketItem + (vboxIndexSelectedItem - OFFSET);
 
-        if(vboxIndexSelectedItem > 0 && listIndexSelectedItem < dummyData.Count)
+        if(vboxIndexSelectedItem > 0 && listIndexSelectedItem < DataManager.bucketItems.Count)
         {
-            dummyData.RemoveAt(listIndexSelectedItem);
-            if(this.listIndexFirstVisibleBucketItem >= dummyData.Count)
+            DataManager.bucketItems.RemoveAt(listIndexSelectedItem);
+            if(this.listIndexFirstVisibleBucketItem >= DataManager.bucketItems.Count)
             {
-                this.listIndexFirstVisibleBucketItem = dummyData.Count - 1;
+                this.listIndexFirstVisibleBucketItem = DataManager.bucketItems.Count - 1;
             }
         }
 
@@ -171,7 +174,7 @@ public partial class BucketEntriesManager : Node
 
     public void _on_title_ready()
     {
-        var titleItem = GetNode<BucketListEntry>("/root/MainScreen/%Title");
+        var titleItem = GetNode<BucketListEntry>("/root/Node/MainScreen/%Title");
 
         titleItem.alterarTexto("My Bucket List");
         titleItem.label.HorizontalAlignment = HorizontalAlignment.Center;

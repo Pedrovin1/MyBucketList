@@ -13,21 +13,48 @@ public partial class ComponentsManager_ItemDetailsScreen : Node
 
     public void onSelecionarItemSucessor()
     {
+        this.removerDestaqueComponente(this.indexSelectedComponent);
         this.indexSelectedComponent++;
         if(this.indexSelectedComponent > 1){this.indexSelectedComponent = -1;}
-        this.selecionarComponente(this.indexSelectedComponent);
+        this.destacarComponente(this.indexSelectedComponent);
     }
 
     public void onSelecionarItemAntecessor()
     {
+        this.removerDestaqueComponente(this.indexSelectedComponent);
         this.indexSelectedComponent--;
         if(this.indexSelectedComponent < -1){this.indexSelectedComponent = -1;}
-        this.selecionarComponente(this.indexSelectedComponent);
+        this.destacarComponente(this.indexSelectedComponent);
     }
 
-    public void selecionarComponente(int indexSelectedComponent)
+    public void destacarComponente(int indexSelectedComponent)
     {
-        
+        if(indexSelectedComponent <= -1) return;
+        if(indexSelectedComponent == 0)
+        {
+            rootNodeDetailsComponents.GetChild<Message_TextBar>(0).destacarComponente();
+            return;
+        }
+        if(indexSelectedComponent == 1)
+        {
+            //rootNodeDetailsComponents.GetChild<-->(0).destacarComponente();
+            return;
+        }
+    }
+
+    public void removerDestaqueComponente(int indexSelectedComponent)
+    {
+        if(indexSelectedComponent <= -1) return;
+        if(indexSelectedComponent == 0)
+        {
+            rootNodeDetailsComponents.GetChild<Message_TextBar>(0).removerDestaque();
+            return;
+        }
+        if(indexSelectedComponent == 1)
+        {
+            //rootNodeDetailsComponents.GetChild<-->(0).destacarComponente();
+            return;
+        }
     }
 
 }

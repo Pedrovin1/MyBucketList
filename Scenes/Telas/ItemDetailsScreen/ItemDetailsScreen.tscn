@@ -1,9 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://4lviyeydc2hc"]
+[gd_scene load_steps=5 format=3 uid="uid://4lviyeydc2hc"]
 
 [ext_resource type="PackedScene" uid="uid://c30m5jnhyan8m" path="res://Scenes/TextBar/Message_TextBar.tscn" id="1_2qfj7"]
 [ext_resource type="Script" path="res://Scenes/Telas/ItemDetailsScreen/ItemDetailsScreen.cs" id="1_531bo"]
 [ext_resource type="Script" path="res://Scenes/Telas/ItemDetailsScreen/InputHandler_ItemDetailsScreen.cs" id="2_3tuon"]
-[ext_resource type="PackedScene" uid="uid://qkk7mpgusq2g" path="res://Scenes/BucketListEntry/BucketListEntry.tscn" id="2_kqtk8"]
 [ext_resource type="Script" path="res://Scenes/Telas/ItemDetailsScreen/ComponentsManager_ItemDetailsScreen.cs" id="2_lrvdy"]
 
 [node name="ItemDetailsScreen" type="Control"]
@@ -21,30 +20,29 @@ script = ExtResource("2_3tuon")
 [node name="ComponentsManager" type="Node" parent="."]
 script = ExtResource("2_lrvdy")
 
-[node name="Polygon2D" type="Polygon2D" parent="."]
-color = Color(0, 0, 0, 1)
-polygon = PackedVector2Array(0, 0, 300, 0, 300, 200, 0, 200)
-
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="Title" parent="CanvasLayer" instance=ExtResource("2_kqtk8")]
+[node name="Title" parent="CanvasLayer" instance=ExtResource("1_2qfj7")]
 unique_name_in_owner = true
-offset_top = -100.0
-offset_bottom = -75.0
 
-[node name="ItemDescriptionSection" type="Control" parent="CanvasLayer"]
+[node name="ItemDescriptionComponent" type="Control" parent="CanvasLayer"]
 layout_mode = 3
 anchors_preset = 0
 offset_top = 25.0
 offset_right = 300.0
 offset_bottom = 175.0
 
-[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/ItemDescriptionSection"]
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/ItemDescriptionComponent"]
 layout_mode = 0
 offset_left = 5.0
 offset_top = 5.0
 offset_right = 295.0
 offset_bottom = 145.0
+theme_override_font_sizes/normal_font_size = 14
+theme_override_font_sizes/bold_font_size = 15
+theme_override_font_sizes/italics_font_size = 14
+theme_override_font_sizes/bold_italics_font_size = 14
+theme_override_font_sizes/mono_font_size = 14
 
 [node name="Message_TextBar" parent="CanvasLayer" instance=ExtResource("1_2qfj7")]
 offset_top = 175.0

@@ -24,11 +24,15 @@ public partial class InputHandler_MainScreen : Node
     [Signal]
     public delegate void RemoverBucketItemEventHandler();
 
+    [Signal]
+    public delegate void VerDetalhesItemSelecionadoEventHandler();
+
     private enum ModosManipulacaoLista
     {
         Default,
         Edicao,
-        Confirmacao
+        Confirmacao,
+        Inativo
     }
 
     ModosManipulacaoLista modoManipulacaoAtual = ModosManipulacaoLista.Default;
@@ -40,6 +44,8 @@ public partial class InputHandler_MainScreen : Node
 
     public void onTeclaContextualPressionada(InputEvent @event)
     {
+        if(modoManipulacaoAtual == ModosManipulacaoLista.Inativo){ return; }
+
         InputEventKey tecla = @event as InputEventKey;
         switch(tecla.AsTextKeyLabel())
         {
@@ -63,7 +69,12 @@ public partial class InputHandler_MainScreen : Node
             case "Enter": 
                 switch(modoManipulacaoAtual)
                 {
-                    case ModosManipulacaoLista.Default: break; //acessar detalhes do item
+                    case ModosManipulacaoLista.Default: 
+                        modoManipulacaoAtual = ModosManipulacaoLista.Inativo;
+                        this.EmitSignal(SignalName.DesativarModoCriarBucketListItem);
+                        this.EmitSignal(SignalName.VerDetalhesItemSelecionado);
+                        break;
+
                     case ModosManipulacaoLista.Edicao:
                         this.EmitSignal(SignalName.AdicionarNovoBucketItem);
                         this.EmitSignal(SignalName.DesativarModoCriarBucketListItem);
@@ -85,6 +96,11 @@ public partial class InputHandler_MainScreen : Node
 
             default: break;
         }
+    }
+
+    public void Ativar()
+    {
+        modoManipulacaoAtual = ModosManipulacaoLista.Default;
     }
 
     
