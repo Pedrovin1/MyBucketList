@@ -4,9 +4,12 @@ using System;
 public partial class InputHandler_ItemDetailsScreen : Node
 {
     [Signal]
-    public delegate void SelecionarItemSucessorEventHandler(int movimentacao);
+    public delegate void SelecionarItemSucessorEventHandler();
     [Signal]
-    public delegate void SelecionarItemAntecessorEventHandler(int movimentacao);
+    public delegate void SelecionarItemAntecessorEventHandler();
+    
+    [Signal]
+    public delegate void AtivarModoEdicaoTextoEventHandler(string startingText);
 
     [Signal]
     public delegate void SairTelaAtualEventHandler();

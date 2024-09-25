@@ -10,7 +10,7 @@ public partial class InputHandler_MainScreen : Node
     public delegate void SelecionarItemAntecessorEventHandler(int movimentacao);
 
     [Signal]
-    public delegate void AtivarModoCriarBucketListItemEventHandler();
+    public delegate void AtivarModoCriarBucketListItemEventHandler(string startingText = "");
     [Signal]
     public delegate void DesativarModoCriarBucketListItemEventHandler();
 
@@ -91,7 +91,7 @@ public partial class InputHandler_MainScreen : Node
                 break;
             case "Space":
                 modoManipulacaoAtual = ModosManipulacaoLista.Edicao; 
-                this.EmitSignal(SignalName.AtivarModoCriarBucketListItem);
+                this.EmitSignal(SignalName.AtivarModoCriarBucketListItem, "");
                 break;
 
             default: break;

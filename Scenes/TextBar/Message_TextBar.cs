@@ -32,8 +32,14 @@ public partial class Message_TextBar : Control
         polygon.Color = Colors.Black;
     }
 
-    public void onAtivarModoDigitacao()
+    public void onAtivarModoDigitacao(string startingText = "")
     {
+        if(startingText != string.Empty)
+        {
+            currentText.Clear();
+            currentText.Append(startingText);
+        }
+
         this.SetProcessInput(true);
 
         blinkingRectangle.ativarBlinking();
@@ -43,6 +49,13 @@ public partial class Message_TextBar : Control
 
         polygon.Color = Colors.Black;
     }
+
+    public void onPausarModoDigitacao()
+    {
+        this.SetProcessInput(false);
+        blinkingRectangle.desativarBlinking();
+    }
+
     public void onDesativarModoCriarItem()
     {
         this.SetProcessInput(false);

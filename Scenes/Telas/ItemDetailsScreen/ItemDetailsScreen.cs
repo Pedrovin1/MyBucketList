@@ -7,12 +7,11 @@ public partial class ItemDetailsScreen : Control
     public delegate void AtivarMainScreenEventHandler();
 
     private Message_TextBar titleTextBar;
+    private ItemDescriptionComponent itemDescriptionComponent;
     private Message_TextBar bottomTextBar;
 
     CanvasLayer canvasRoot;
     InputHandler_ItemDetailsScreen inputHandlerComponent;
-
-    private BucketItem bucketItem = null;
 
     public override void _Ready()
     {
@@ -20,6 +19,7 @@ public partial class ItemDetailsScreen : Control
         inputHandlerComponent.SairTelaAtual += this.onSairTelaAtual;
 
         titleTextBar = (Message_TextBar)FindChild("Title");
+        itemDescriptionComponent = (ItemDescriptionComponent)FindChild("ItemDescriptionComponent");
         bottomTextBar = (Message_TextBar)FindChild("Message_TextBar");
         GetNode<MainScreen>("/root/Node/MainScreen").AtivarItemDetailsScreen += inicializarTelaDetalhes;
 
@@ -30,7 +30,7 @@ public partial class ItemDetailsScreen : Control
     {
         BucketItem item = DataManager.bucketItems[listIndexItem];
         titleTextBar.ExibirMensagem(item.nome, Colors.White);
-        //inicializar componente descrição
+        itemDescriptionComponent.ExibirMensagem(item.descricao, Colors.White);
         inputHandlerComponent.Ativar();
         canvasRoot.Visible = true;
     }

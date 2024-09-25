@@ -9,6 +9,11 @@ public partial class ComponentsManager_ItemDetailsScreen : Node
     public override void _Ready()
     {
         rootNodeDetailsComponents = GetNode("../CanvasLayer");
+
+        var inputHandlerComponent = GetNode<InputHandler_ItemDetailsScreen>("/root/Node/ItemDetailsScreen/InputHandler");
+        inputHandlerComponent.SelecionarItemSucessor += onSelecionarItemSucessor;
+        inputHandlerComponent.SelecionarItemAntecessor += onSelecionarItemAntecessor;
+
     }
 
     public void onSelecionarItemSucessor()
@@ -37,7 +42,7 @@ public partial class ComponentsManager_ItemDetailsScreen : Node
         }
         if(indexSelectedComponent == 1)
         {
-            //rootNodeDetailsComponents.GetChild<-->(0).destacarComponente();
+            rootNodeDetailsComponents.GetChild<ItemDescriptionComponent>(1).destacarComponente();
             return;
         }
     }
@@ -52,7 +57,7 @@ public partial class ComponentsManager_ItemDetailsScreen : Node
         }
         if(indexSelectedComponent == 1)
         {
-            //rootNodeDetailsComponents.GetChild<-->(0).destacarComponente();
+            rootNodeDetailsComponents.GetChild<ItemDescriptionComponent>(1).removerDestaque();
             return;
         }
     }

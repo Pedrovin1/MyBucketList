@@ -38,7 +38,7 @@ public partial class MainScreen : Control
         {
             this.onAtivar();
         }
-        }
+    }
 
     public void onAtivar()
     {
