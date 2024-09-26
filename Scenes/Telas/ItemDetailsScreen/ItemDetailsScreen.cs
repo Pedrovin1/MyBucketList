@@ -52,6 +52,9 @@ public partial class ItemDetailsScreen : Control
     {
         this.EmitSignal(SignalName.AtivarMainScreen);
         canvasRoot.Visible = false;
+
+        titleTextBar.onDesativarModoCriarItem();
+        itemDescriptionComponent.onDesativarModoCriarItem();
     }
 
 
