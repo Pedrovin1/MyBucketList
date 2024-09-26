@@ -13,10 +13,13 @@ public partial class ItemDetailsScreen : Control
     CanvasLayer canvasRoot;
     InputHandler_ItemDetailsScreen inputHandlerComponent;
 
+    BucketItem selectedBucketItem = null;
+
     public override void _Ready()
     {
         inputHandlerComponent = (InputHandler_ItemDetailsScreen)FindChild("InputHandler");
         inputHandlerComponent.SairTelaAtual += this.onSairTelaAtual;
+        inputHandlerComponent.SalvarEdicaoTexto += this.onSalvarEdicao;
 
         titleTextBar = (Message_TextBar)FindChild("Title");
         itemDescriptionComponent = (ItemDescriptionComponent)FindChild("ItemDescriptionComponent");
@@ -28,11 +31,21 @@ public partial class ItemDetailsScreen : Control
     }
     public void inicializarTelaDetalhes(int listIndexItem)
     {
-        BucketItem item = DataManager.bucketItems[listIndexItem];
-        titleTextBar.ExibirMensagem(item.nome, Colors.White);
-        itemDescriptionComponent.ExibirMensagem(item.descricao, Colors.White);
+        selectedBucketItem = DataManager.bucketItems[listIndexItem];
+
+        titleTextBar.onAtivarModoDigitacao(selectedBucketItem.nome);
+        titleTextBar.onPausarModoDigitacao();
+
+        itemDescriptionComponent.onAtivarModoDigitacao(selectedBucketItem.descricao);
+        itemDescriptionComponent.onPausarModoDigitacao();
+
         inputHandlerComponent.Ativar();
         canvasRoot.Visible = true;
+    }
+
+    public void onSalvarEdicao()
+    {
+        selectedBucketItem.atualizarDados(titleTextBar.currentText.ToString(), itemDescriptionComponent.currentText.ToString());
     }
 
     public void onSairTelaAtual()

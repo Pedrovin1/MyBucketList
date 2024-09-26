@@ -9,7 +9,9 @@ public partial class InputHandler_ItemDetailsScreen : Node
     public delegate void SelecionarItemAntecessorEventHandler();
     
     [Signal]
-    public delegate void AtivarModoEdicaoTextoEventHandler(string startingText);
+    public delegate void AtivarModoEdicaoTextoEventHandler();
+    [Signal]
+    public delegate void SalvarEdicaoTextoEventHandler();
 
     [Signal]
     public delegate void SairTelaAtualEventHandler();
@@ -38,7 +40,6 @@ public partial class InputHandler_ItemDetailsScreen : Node
             case "Escape":
                 if (modoManipulacaoAtual == ModosManipulacaoLista.Default)
                 {
-                    //this.EmitSignal(SignalName.)
                     modoManipulacaoAtual = ModosManipulacaoLista.Inativo;
                     this.EmitSignal(SignalName.SairTelaAtual);
                 }
@@ -55,7 +56,18 @@ public partial class InputHandler_ItemDetailsScreen : Node
                     this.EmitSignal(SignalName.SelecionarItemSucessor);
                 }
                 break;
-            case "Enter": break;
+            case "Enter": 
+                if(modoManipulacaoAtual == ModosManipulacaoLista.Default)
+                {
+                    modoManipulacaoAtual = ModosManipulacaoLista.Edicao;
+                    this.EmitSignal(SignalName.AtivarModoEdicaoTexto);
+                }
+                else if(modoManipulacaoAtual == ModosManipulacaoLista.Edicao)
+                {
+                    modoManipulacaoAtual = ModosManipulacaoLista.Default;
+                    this.EmitSignal(SignalName.SalvarEdicaoTexto);
+                }
+                break;
             case "Tab": break;
             case "Space":break;
 

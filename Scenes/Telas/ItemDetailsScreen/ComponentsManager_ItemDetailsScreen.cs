@@ -13,6 +13,8 @@ public partial class ComponentsManager_ItemDetailsScreen : Node
         var inputHandlerComponent = GetNode<InputHandler_ItemDetailsScreen>("/root/Node/ItemDetailsScreen/InputHandler");
         inputHandlerComponent.SelecionarItemSucessor += onSelecionarItemSucessor;
         inputHandlerComponent.SelecionarItemAntecessor += onSelecionarItemAntecessor;
+        inputHandlerComponent.AtivarModoEdicaoTexto += onAtivarModoEdicao;
+        inputHandlerComponent.SalvarEdicaoTexto += onDesativarModeEdicao;
 
     }
 
@@ -59,6 +61,41 @@ public partial class ComponentsManager_ItemDetailsScreen : Node
         {
             rootNodeDetailsComponents.GetChild<ItemDescriptionComponent>(1).removerDestaque();
             return;
+        }
+    }
+
+    public void onAtivarModoEdicao()
+    {
+        if(this.indexSelectedComponent <= -1)
+        {
+            GetNode<InputHandler_ItemDetailsScreen>("/root/Node/ItemDetailsScreen/InputHandler").Ativar();
+            return;
+        }
+        if(this.indexSelectedComponent == 0)
+        {
+            rootNodeDetailsComponents.GetChild<Message_TextBar>(0).removerDestaque();
+            rootNodeDetailsComponents.GetChild<Message_TextBar>(0).onAtivarModoDigitacao();
+        }
+        if(this.indexSelectedComponent == 1)
+        {
+            rootNodeDetailsComponents.GetChild<ItemDescriptionComponent>(1).removerDestaque();
+            rootNodeDetailsComponents.GetChild<ItemDescriptionComponent>(1).onAtivarModoDigitacao();
+        }
+    }
+
+    public void onDesativarModeEdicao()
+    {
+         if(this.indexSelectedComponent <= -1)
+        {
+            return;
+        }
+        if(this.indexSelectedComponent == 0)
+        {
+            rootNodeDetailsComponents.GetChild<Message_TextBar>(0).onPausarModoDigitacao();
+        }
+        if(this.indexSelectedComponent == 1)
+        {
+            rootNodeDetailsComponents.GetChild<ItemDescriptionComponent>(1).onPausarModoDigitacao();
         }
     }
 
