@@ -172,12 +172,17 @@ public partial class BucketEntriesManager : Node
     }
 
 
-    public void _on_title_ready()
+    private void _on_title_ready()
     {
         var titleItem = GetNode<BucketListEntry>("/root/Node/MainScreen/%Title");
 
         titleItem.alterarTexto("My Bucket List");
         titleItem.label.HorizontalAlignment = HorizontalAlignment.Center;
         titleItem.label.VerticalAlignment = VerticalAlignment.Center;
+    }
+ 
+    public void RefreshUI()
+    {
+        this.updateVisibleBucketEntries(this.listIndexFirstVisibleBucketItem);
     }
 }

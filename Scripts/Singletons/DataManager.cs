@@ -7,25 +7,22 @@ using System.Text.Json.Serialization;
 
 public partial class DataManager : Node
 {
-    [Signal]
-    public delegate void SaveImportingErrorOccurredEventHandler();
-
-    private string appDataFolderPath;
-    private string appDataJsonPath;
+    private static string appDataFolderPath;
+    private static string appDataJsonPath;
 
     public static List<BucketItem> bucketItems = new();
     public static Exception errorStatus = null;
 
     public override void _Ready()
     {
-        this.appDataFolderPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData, System.Environment.SpecialFolderOption.Create);
-        this.appDataFolderPath += @"\MyBucketList";
-        this.appDataJsonPath = appDataFolderPath + @"\bucketlist_data.json";
+        DataManager.appDataFolderPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData, System.Environment.SpecialFolderOption.Create);
+        DataManager.appDataFolderPath += @"\MyBucketList";
+        DataManager.appDataJsonPath = appDataFolderPath + @"\bucketlist_data.json";
 
         this.ImportarLista(); 
     }
 
-    private void ExportarLista()
+    public static void ExportarLista()
     {
         string jsonString = System.Text.Json.JsonSerializer.Serialize(bucketItems);
 
@@ -47,16 +44,16 @@ public partial class DataManager : Node
     {
         string jsonString = string.Empty;
 
-        if(!Godot.DirAccess.DirExistsAbsolute(this.appDataFolderPath))
+        if(!Godot.DirAccess.DirExistsAbsolute(DataManager.appDataFolderPath))
         {
-            Godot.DirAccess.MakeDirAbsolute(this.appDataFolderPath);
+            Godot.DirAccess.MakeDirAbsolute(DataManager.appDataFolderPath);
         }
-        if(!Godot.FileAccess.FileExists(this.appDataJsonPath))
+        if(!Godot.FileAccess.FileExists(DataManager.appDataJsonPath))
         {
-            File.Create(this.appDataJsonPath);
+            File.Create(DataManager.appDataJsonPath);
         }
 
-        var file = Godot.FileAccess.Open(this.appDataJsonPath, Godot.FileAccess.ModeFlags.Read);
+        var file = Godot.FileAccess.Open(DataManager.appDataJsonPath, Godot.FileAccess.ModeFlags.Read);
         jsonString = file.GetAsText();
         file.Close();
 

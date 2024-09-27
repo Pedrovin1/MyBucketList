@@ -52,7 +52,21 @@ public partial class InputHandler_MainScreen : Node
             case "Escape": 
                 switch (modoManipulacaoAtual)
                 {
-                    case ModosManipulacaoLista.Default: break; //exportar e sair da aplicação
+                    case ModosManipulacaoLista.Default:
+                        if(DataManager.errorStatus != null)
+                        {
+                            this.GetTree().Quit(); //perguntar confirmação
+                        }
+
+                        try{
+                            DataManager.ExportarLista();
+                        }
+                        catch(Exception e)
+                        {
+                            this.GetTree().Quit(); //perguntar confirmação
+                        }
+                        this.GetTree().Quit();
+                        break;
                     case ModosManipulacaoLista.Edicao:
                         this.EmitSignal(SignalName.ConfirmacaoEscolhida, false);
                         modoManipulacaoAtual = ModosManipulacaoLista.Default;

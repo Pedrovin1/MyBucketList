@@ -45,6 +45,7 @@ public partial class MainScreen : Control
     public void onAtivar()
     {
         canvasRoot.Visible = true;
+        ( (BucketEntriesManager)this.FindChild("BucketEntriesManager") ).RefreshUI();
         inputHandlerComponent.Ativar();
     }
     public void Desativar()
