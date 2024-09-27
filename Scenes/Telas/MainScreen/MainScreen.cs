@@ -17,6 +17,8 @@ public partial class MainScreen : Control
 
         canvasRoot = (CanvasLayer)FindChild("CanvasLayer");
         canvasRoot.Visible = true;
+
+        this.checkSaveImportingError();
     }
 
     public void _on_item_details_screen_ready()
@@ -48,6 +50,14 @@ public partial class MainScreen : Control
     public void Desativar()
     {
         canvasRoot.Visible = false;
+    }
+
+    public void checkSaveImportingError()
+    {
+        if(DataManager.errorStatus == null){ return; }
+        
+        var messageTextBar = (Message_TextBar)FindChild("Message_TextBar");
+        messageTextBar.ExibirMensagem("Import of Save File Failed", Colors.Red);
     }
 
 
