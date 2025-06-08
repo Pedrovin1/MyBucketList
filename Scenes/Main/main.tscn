@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3 uid="uid://byrr2ifqspx85"]
+
+[ext_resource type="Script" uid="uid://bbswnybmv6xr" path="res://Scenes/Main/Main.cs" id="1_1r6ip"]
+[ext_resource type="PackedScene" uid="uid://bnq4r758sqhsl" path="res://Scenes/TitleTextBoxComponent/TitleTextBoxComponent.tscn" id="2_lixft"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_1r6ip")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+clip_contents = true
+offset_right = 278.0
+offset_bottom = 266.0
+
+[node name="TitleTextBoxComponent" parent="VBoxContainer" instance=ExtResource("2_lixft")]
+layout_mode = 2
+
+[node name="TitleTextBoxComponent2" parent="VBoxContainer" instance=ExtResource("2_lixft")]
+layout_mode = 2
+
+[node name="TitleTextBoxComponent3" parent="VBoxContainer" instance=ExtResource("2_lixft")]
+layout_mode = 2
+
+[node name="TitleTextBoxComponent4" parent="VBoxContainer" instance=ExtResource("2_lixft")]
+layout_mode = 2
+
+[node name="TitleTextBoxComponent5" parent="VBoxContainer" instance=ExtResource("2_lixft")]
+layout_mode = 2
