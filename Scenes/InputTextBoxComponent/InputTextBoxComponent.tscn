@@ -1,0 +1,58 @@
+[gd_scene load_steps=3 format=3 uid="uid://cgmqms3t7xge4"]
+
+[ext_resource type="Script" uid="uid://ueoj1ngu10l1" path="res://Scenes/InputTextBoxComponent/InputTextBox.cs" id="1_6fmrl"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6fmrl"]
+
+[node name="InputTextBoxComponent" type="Control"]
+custom_minimum_size = Vector2(100, 50)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 100.0
+offset_bottom = 50.0
+script = ExtResource("1_6fmrl")
+
+[node name="PolygonBorder" type="Polygon2D" parent="."]
+unique_name_in_owner = true
+polygon = PackedVector2Array(0, 0, 100, 0, 100, 50, 0, 50)
+
+[node name="PolygonBackground" type="Polygon2D" parent="."]
+unique_name_in_owner = true
+color = Color(0, 0, 0, 1)
+polygon = PackedVector2Array(0, 0, 100, 0, 100, 50, 0, 50)
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_right = 4
+
+[node name="InputLine" type="LineEdit" parent="MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+mouse_filter = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_6fmrl")
+editable = false
+context_menu_enabled = false
+emoji_menu_enabled = false
+virtual_keyboard_enabled = false
+middle_mouse_paste_enabled = false
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
+flat = true
+
+[node name="TextLabel" type="RichTextLabel" parent="MarginContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+bbcode_enabled = true
+text = "Placeholder"
+scroll_active = false
+autowrap_mode = 0
+vertical_alignment = 1
