@@ -1,7 +1,9 @@
 using Godot;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 public partial class UserData : Node
 {
@@ -20,6 +22,33 @@ public partial class UserData : Node
         this.UserDataFolderPath =
             System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData)
             + @"\" + UserData.UserDataFolderName;
+
+        this.ImportData();
+    }
+
+    public void ImportData()
+    {
+        string saveFilePath = this.UserDataFolderPath + @"\" + UserData.UserDataFileName;
+
+        if (!Godot.DirAccess.DirExistsAbsolute(this.UserDataFolderPath))
+        {
+            System.IO.Directory.CreateDirectory(this.UserDataFolderPath);
+        }
+        if (!Godot.FileAccess.FileExists(saveFilePath))
+        {
+            System.IO.File.Create(saveFilePath).Close();
+            this._bucketItems = new();
+            return;
+        }
+
+        string jsonString;
+        using (var file = Godot.FileAccess.Open(saveFilePath, Godot.FileAccess.ModeFlags.Read))
+        {
+            jsonString = file.GetAsText();
+        }
+
+        var parseResult = System.Text.Json.JsonSerializer.Deserialize<List<BucketItem>>(jsonString);
+        this._bucketItems = parseResult ?? new();
     }
 
     public async void ExportData()
