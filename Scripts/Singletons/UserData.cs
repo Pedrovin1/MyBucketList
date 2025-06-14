@@ -26,6 +26,11 @@ public partial class UserData : Node
         this.ImportData();
     }
 
+    public void AddBucketItem(BucketItem newItem)
+    {
+        this._bucketItems.Add(newItem);
+    }
+
     public void ImportData()
     {
         string saveFilePath = this.UserDataFolderPath + @"\" + UserData.UserDataFileName;

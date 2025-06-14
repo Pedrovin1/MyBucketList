@@ -3,6 +3,7 @@ using System;
 
 public class BucketItem
 {
+    //public int ID { get; private set; } = -1; 
     public required string Title { get; set; }
     public string Description { get; set; } = string.Empty;
     public DateTime CreatedDate { get; set; }
@@ -12,6 +13,8 @@ public class BucketItem
 
     public BucketItem(string title = "Untitled")
     {
+        //this.ID = 
+
         this.Title = title;
 
         this.Description = string.Empty;
@@ -20,8 +23,9 @@ public class BucketItem
         this.Done = false;
     }
 
-    public BucketItem(string title, string description, DateTime createdDate, DateTime lastModified, bool done)
+    public BucketItem(string title, string description, DateTime createdDate, DateTime lastModified, bool done) //int id, 
     {
+        //this.ID = id;
         this.Title = title;
         this.Description = description;
         this.CreatedDate = createdDate;
