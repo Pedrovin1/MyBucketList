@@ -10,7 +10,7 @@ public partial class MainMenuManager : Node
     {
         Off,
         ItemCreation,
-        ItemEditting,
+        ItemEditing,
         Scrolling,
         TextSearch,
     }
@@ -25,6 +25,10 @@ public partial class MainMenuManager : Node
         VBoxContainer _itemList = GetNode<VBoxContainer>("%ItemList");
         InputTextBox _inputBox = GetNode<InputTextBox>("%InputBox");
 
+        //Signals
+        _inputBox.TextSubmitted += this.onTextSubmitted;
+
+        //Handler
         this._handler = new MainMenuHandler
         (
             sceneRoot: this.GetOwner(),
@@ -52,7 +56,7 @@ public partial class MainMenuManager : Node
             this._handler.MoveSelectionDown();
             return;
         }
-        
+
         if (@event.IsActionReleased(nameof(EventNames.Tab)))
         {
             return;
@@ -64,6 +68,11 @@ public partial class MainMenuManager : Node
         }
         if (@event.IsActionReleased(nameof(EventNames.Space)))
         {
+            if (this.currentMode == ActionModes.Scrolling)
+            {
+                this.currentMode = ActionModes.ItemCreation;
+                this._handler.ActivateInputBox();
+            }
             return;
         }
 
@@ -95,6 +104,20 @@ public partial class MainMenuManager : Node
         if (@event.IsActionReleased(nameof(EventNames.E)))
         {
             return;
+        }
+    }
+
+    private void onTextSubmitted(string inputBoxText)
+    {
+        switch (this.currentMode)
+        {
+            case ActionModes.ItemCreation:
+                this._handler.AddBucketItem(inputBoxText);
+                this._handler.DeactivateInputBox(wipeText:true);
+                this.currentMode = ActionModes.Scrolling;
+            break;
+
+            default: return;
         }
     }
 }

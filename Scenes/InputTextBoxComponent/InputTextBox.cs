@@ -5,7 +5,7 @@ using System;
 public partial class InputTextBox : TitleTextBox
 {
     [Signal]
-    public delegate string TextSubmittedEventHandler();
+    public delegate void TextSubmittedEventHandler(string text);
 
 
     private LineEdit _inputNode;

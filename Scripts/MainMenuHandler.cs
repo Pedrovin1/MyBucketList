@@ -11,7 +11,7 @@ public partial class MainMenuHandler : Node
     private VBoxContainer _itemList;
     private InputTextBox _inputBox;
 
-    private int _vboxIndexSelectedItem = -1; //-1
+    private int _vboxIndexSelectedItem = -1;
     private int[] _itemListIndexRange = { 0, 0 }; //(Inclusive - Exclusive)
 
     public MainMenuHandler(Node sceneRoot, TitleTextBox titleBox, VBoxContainer itemList, InputTextBox inputBox)
@@ -69,7 +69,7 @@ public partial class MainMenuHandler : Node
         {
             this._vboxIndexSelectedItem = this._itemList.GetChildCount() - 1;
 
-            if(this._itemListIndexRange[1] + 1 < UserData.Instance.BucketItems.Count)
+            if(this._itemListIndexRange[1] + 1 <= UserData.Instance.BucketItems.Count)
             {
                 this._itemListIndexRange[0]++;
                 this._itemListIndexRange[1]++;
@@ -79,6 +79,28 @@ public partial class MainMenuHandler : Node
         }
 
         this.flagSelectedItem();
+    }
+
+    public void ActivateInputBox()
+    {
+        this._inputBox.activateKeyboardTextListening();
+    }
+    public void DeactivateInputBox(bool wipeText = true)
+    {
+        if (wipeText) { this._inputBox.wipeInputText(); }
+
+        this._inputBox.stopKeyboardTextListening();
+    }
+
+    public void AddBucketItem(string titleText)
+    {
+        UserData.Instance.BucketItems.Add(new BucketItem(titleText));
+
+        if (this._itemListIndexRange[1] < this._itemList.GetChildCount())
+        {
+            this._itemListIndexRange[1]++;
+            this.updateItemsListText(this._itemListIndexRange);
+        }
     }
 
     private void updateItemsListText(int[] range)
