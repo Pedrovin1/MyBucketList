@@ -11,8 +11,8 @@ public partial class MainMenuHandler : Node
     private VBoxContainer _itemList;
     private InputTextBox _inputBox;
 
-    private int _vboxIndexSelectedItem = 3; //-1
-    private int[] _itemListIndexRange = { 0, 4 }; //(Inclusive - Inclusive)
+    private int _vboxIndexSelectedItem = -1; //-1
+    private int[] _itemListIndexRange = { 0, 0 }; //(Inclusive - Exclusive)
 
     public MainMenuHandler(Node sceneRoot, TitleTextBox titleBox, VBoxContainer itemList, InputTextBox inputBox)
     {
@@ -25,6 +25,8 @@ public partial class MainMenuHandler : Node
         this._itemList.Connect(SignalName.Ready, Callable.From(this.itemListStartUp), (uint)GodotObject.ConnectFlags.OneShot);
 
         this._inputBox = inputBox;
+
+        this._itemListIndexRange[1] = Math.Clamp(UserData.Instance.BucketItems.Count(), 0, this._itemList.GetChildCount() );
     }
 
     private void titleBoxStartUp() { this._titleBox.updateText("MyBucketList"); }
@@ -39,7 +41,7 @@ public partial class MainMenuHandler : Node
     public void MoveSelectionUp()
     {
         this._vboxIndexSelectedItem--;
-        this.resetAllItemTextBoxes();
+        this.resetAllItemTextBoxesStyles();
 
         if (this._vboxIndexSelectedItem <= -1)
         {
@@ -53,32 +55,44 @@ public partial class MainMenuHandler : Node
             this._itemListIndexRange[0]--;
             this._itemListIndexRange[1]--;
             this.updateItemsListText(this._itemListIndexRange);
-
-            this.flagSelectedItem();
         }
-        else
-        {
-            this.flagSelectedItem();
-        }
+        
+        this.flagSelectedItem();
     }
 
     public void MoveSelectionDown()
     {
-        
+        this._vboxIndexSelectedItem++;
+        this.resetAllItemTextBoxesStyles();
+
+        if (this._vboxIndexSelectedItem >= this._itemList.GetChildCount())
+        {
+            this._vboxIndexSelectedItem = this._itemList.GetChildCount() - 1;
+
+            if(this._itemListIndexRange[1] + 1 < UserData.Instance.BucketItems.Count)
+            {
+                this._itemListIndexRange[0]++;
+                this._itemListIndexRange[1]++;
+            }
+            
+            this.updateItemsListText(this._itemListIndexRange);
+        }
+
+        this.flagSelectedItem();
     }
 
     private void updateItemsListText(int[] range)
     {
         if (range.Length != 2) { throw new ArgumentException($"Invalid Range, Range Array must have exact 2 numbers"); }
 
-        int rangeDifference = this._itemListIndexRange[1] - this._itemListIndexRange[0];
-        if (rangeDifference > this._itemList.GetChildCount() - 1 || rangeDifference < 0)
+        int rangeDifference = range[1] - range[0];
+        if (rangeDifference > this._itemList.GetChildCount() || rangeDifference <= 0)
         {
             throw new ArgumentException($"Invalid Range Values, Range Difference = {rangeDifference}");
         }
 
         int vboxIndexCounter = 0;
-        for (int i = range[0]; i <= range[1]; i++)
+        for (int i = range[0]; i < range[1]; i++)
         {
             var textBox = this._itemList.GetChild<TitleTextBox>(vboxIndexCounter);
             textBox.updateText(UserData.Instance.BucketItems[i].Title);
@@ -86,7 +100,7 @@ public partial class MainMenuHandler : Node
         }
     }
 
-    private void resetAllItemTextBoxes()
+    private void resetAllItemTextBoxesStyles()
     {
         foreach (TitleTextBox tb in _itemList.GetChildren().Cast<TitleTextBox>())
         {
