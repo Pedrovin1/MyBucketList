@@ -7,8 +7,7 @@ using System.Linq;
 
 public partial class UserData : Node
 {
-    private List<BucketItem> _bucketItems;
-
+    public List<BucketItem> BucketItems { get; private set; }
     private const string UserDataFolderName = "MyBucketList";
     private const string UserDataFileName = "MyBucketListData.json";
     private string UserDataFolderPath;
@@ -26,11 +25,6 @@ public partial class UserData : Node
         this.ImportData();
     }
 
-    public void AddBucketItem(BucketItem newItem)
-    {
-        this._bucketItems.Add(newItem);
-    }
-
     public void ImportData()
     {
         string saveFilePath = this.UserDataFolderPath + @"\" + UserData.UserDataFileName;
@@ -42,7 +36,7 @@ public partial class UserData : Node
         if (!Godot.FileAccess.FileExists(saveFilePath))
         {
             System.IO.File.Create(saveFilePath).Close();
-            this._bucketItems = new();
+            this.BucketItems = new();
             return;
         }
 
@@ -53,12 +47,12 @@ public partial class UserData : Node
         }
 
         var parseResult = System.Text.Json.JsonSerializer.Deserialize<List<BucketItem>>(jsonString);
-        this._bucketItems = parseResult ?? new();
+        this.BucketItems = parseResult ?? new();
     }
 
     public async void ExportData()
     {
-        string jsonString = System.Text.Json.JsonSerializer.Serialize(this._bucketItems);
+        string jsonString = System.Text.Json.JsonSerializer.Serialize(this.BucketItems);
         string saveFilePath = this.UserDataFolderPath + @"\" + UserData.UserDataFileName;
 
         int counter = 0;

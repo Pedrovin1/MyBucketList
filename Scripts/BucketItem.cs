@@ -4,12 +4,13 @@ using System;
 public class BucketItem
 {
     //public int ID { get; private set; } = -1; 
-    public required string Title { get; set; }
+    public string Title { get; set; } //required
     public string Description { get; set; } = string.Empty;
     public DateTime CreatedDate { get; set; }
     public DateTime LastModificationDate { get; set; }
     public bool Done { get; set; } = false;
 
+    public BucketItem(){}
 
     public BucketItem(string title = "Untitled")
     {

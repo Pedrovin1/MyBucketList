@@ -2,11 +2,22 @@ using CustomComponents;
 using Godot;
 using System;
 
+
+
 public partial class MainMenuManager : Node
 {
-    private MainMenuHandler _handler;
+    private enum ActionModes
+    {
+        Off,
+        ItemCreation,
+        ItemEditting,
+        Scrolling,
+        TextSearch,
+    }
 
-    private bool active = true;
+    private MainMenuHandler _handler;
+    ActionModes currentMode = ActionModes.Scrolling;
+
     public override void _Ready()
     {
         //Nodes
@@ -26,42 +37,64 @@ public partial class MainMenuManager : Node
 
     public override void _UnhandledInput(InputEvent @event)
     {
-        switch (@event.AsText())
+        if (this.currentMode == ActionModes.Off) { return; }
+
+        if (@event.IsActionReleased(nameof(EventNames.ArrowUp)))
         {
-            case nameof(EventNames.ArrowUp):
-                break;
+            if (this.currentMode != ActionModes.Scrolling) { return; }
+            this._handler.MoveSelectionUp();
+            return;
+        }
 
-            case nameof(EventNames.ArrowDown):
-                break;
+        if (@event.IsActionReleased(nameof(EventNames.ArrowDown)))
+        {
+            if (this.currentMode != ActionModes.Scrolling) { return; }
+            this._handler.MoveSelectionDown();
+            return;
+        }
+        
+        if (@event.IsActionReleased(nameof(EventNames.Tab)))
+        {
+            return;
+        }
 
-            case nameof(EventNames.Tab):
-                break;
+        if (@event.IsActionReleased(nameof(EventNames.Esc)))
+        {
+            return;
+        }
+        if (@event.IsActionReleased(nameof(EventNames.Space)))
+        {
+            return;
+        }
 
-            case nameof(EventNames.Esc):
-                break;
+        if (@event.IsActionReleased(nameof(EventNames.Enter)))
+        {
+            return;
+        }
 
-            case nameof(EventNames.Space):
-                break;
+        if (@event.IsActionReleased(nameof(EventNames.Shift_Tab)))
+        {
+            return;
+        }
 
-            case nameof(EventNames.Enter):
-                break;
+        if (@event.IsActionReleased(nameof(EventNames.Delete)))
+        {
+            return;
+        }
 
-            case nameof(EventNames.Shift_Tab):
-                break;
+        if (@event.IsActionReleased(nameof(EventNames.Q)))
+        {
+            return;
+        }
 
-            case nameof(EventNames.Delete):
-                break;
+        if (@event.IsActionReleased(nameof(EventNames.R)))
+        {
+            return;
+        }
 
-            case nameof(EventNames.Q):
-                break;
-
-            case nameof(EventNames.R):
-                break;
-
-            case nameof(EventNames.E):
-                break;
-
-            default: break;
+        if (@event.IsActionReleased(nameof(EventNames.E)))
+        {
+            return;
         }
     }
 }
