@@ -64,6 +64,11 @@ public partial class MainMenuManager : Node
 
         if (@event.IsActionReleased(nameof(EventNames.Esc)))
         {
+            if (this.currentMode == ActionModes.ItemCreation || this.currentMode == ActionModes.ItemEditing)
+            {
+                this.currentMode = ActionModes.Scrolling;
+                this._handler.DeactivateInputBox(wipeText: true);
+            }
             return;
         }
         if (@event.IsActionReleased(nameof(EventNames.Space)))
@@ -93,6 +98,13 @@ public partial class MainMenuManager : Node
 
         if (@event.IsActionReleased(nameof(EventNames.Q)))
         {
+            if (this.currentMode != ActionModes.Scrolling || this._handler.GetSelectedItemListIndex() == -1)
+            {
+                return;
+            }
+
+            this.currentMode = ActionModes.ItemEditing;
+            this._handler.ActivateInputBox();
             return;
         }
 
@@ -113,6 +125,14 @@ public partial class MainMenuManager : Node
         {
             case ActionModes.ItemCreation:
                 this._handler.AddBucketItem(inputBoxText);
+                this._handler.DeactivateInputBox(wipeText:true);
+                this.currentMode = ActionModes.Scrolling;
+            break;
+
+            case ActionModes.ItemEditing:
+                int index = this._handler.GetSelectedItemListIndex();
+
+                this._handler.UpdateBucketItemTitle(index, inputBoxText);
                 this._handler.DeactivateInputBox(wipeText:true);
                 this.currentMode = ActionModes.Scrolling;
             break;

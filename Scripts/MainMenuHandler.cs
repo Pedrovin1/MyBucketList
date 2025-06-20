@@ -38,6 +38,18 @@ public partial class MainMenuHandler : Node
         }
     }
 
+    public int GetSelectedItemListIndex()
+    {
+        if (this._itemListIndexRange[1] - this._itemListIndexRange[0] <= 0 ||
+           this._vboxIndexSelectedItem == -1)
+        {
+            return -1;
+        }
+
+        return this._itemListIndexRange[0] + this._vboxIndexSelectedItem;
+        
+    }
+
     public void MoveSelectionUp()
     {
         this._vboxIndexSelectedItem--;
@@ -56,7 +68,7 @@ public partial class MainMenuHandler : Node
             this._itemListIndexRange[1]--;
             this.updateItemsListText(this._itemListIndexRange);
         }
-        
+
         this.flagSelectedItem();
     }
 
@@ -101,6 +113,21 @@ public partial class MainMenuHandler : Node
             this._itemListIndexRange[1]++;
             this.updateItemsListText(this._itemListIndexRange);
         }
+    }
+
+    public void UpdateBucketItemTitle(int listIndex, string text)
+    {
+        var bucketItem = UserData.Instance.BucketItems[listIndex];
+
+        bucketItem.UpdateItemData
+        (
+            title: text,
+
+            description: bucketItem.Description,
+            done: bucketItem.Done
+        );
+        
+        this.updateItemsListText(this._itemListIndexRange);
     }
 
     private void updateItemsListText(int[] range)
