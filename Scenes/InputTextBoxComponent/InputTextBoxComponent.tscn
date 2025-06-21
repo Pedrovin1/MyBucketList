@@ -46,6 +46,7 @@ middle_mouse_paste_enabled = false
 deselect_on_focus_loss_enabled = false
 drag_and_drop_selection_enabled = false
 flat = true
+caret_blink = true
 
 [node name="TextLabel" type="RichTextLabel" parent="MarginContainer"]
 unique_name_in_owner = true

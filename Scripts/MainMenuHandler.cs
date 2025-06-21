@@ -29,7 +29,12 @@ public partial class MainMenuHandler : Node
         this._itemListIndexRange[1] = Math.Clamp(UserData.Instance.BucketItems.Count(), 0, this._itemList.GetChildCount() );
     }
 
-    private void titleBoxStartUp() { this._titleBox.updateText("MyBucketList"); }
+    private void titleBoxStartUp()
+    {
+        this._titleBox.changeBorderThickness(1);
+        this._titleBox.changeBorderColor(Colors.White);
+        this._titleBox.updateText("MyBucketList");
+    }
     private void itemListStartUp()
     {
         for (int i = 0; i < Math.Clamp(UserData.Instance.BucketItems.Count, 0, this._itemList.GetChildCount()); i++)
@@ -53,6 +58,7 @@ public partial class MainMenuHandler : Node
     public void MoveSelectionUp()
     {
         this._vboxIndexSelectedItem--;
+        this._vboxIndexSelectedItem = Math.Clamp(this._vboxIndexSelectedItem, -1, UserData.Instance.BucketItems.Count - 1);
         this.resetAllItemTextBoxesStyles();
 
         if (this._vboxIndexSelectedItem <= -1)
@@ -75,6 +81,7 @@ public partial class MainMenuHandler : Node
     public void MoveSelectionDown()
     {
         this._vboxIndexSelectedItem++;
+        this._vboxIndexSelectedItem = Math.Clamp(this._vboxIndexSelectedItem, -1, UserData.Instance.BucketItems.Count - 1);
         this.resetAllItemTextBoxesStyles();
 
         if (this._vboxIndexSelectedItem >= this._itemList.GetChildCount())
@@ -114,6 +121,22 @@ public partial class MainMenuHandler : Node
             this.updateItemsListText(this._itemListIndexRange);
         }
     }
+    
+    public void DeleteBucketItem(int listIndex)
+    {
+        UserData.Instance.BucketItems.RemoveAt(listIndex);
+
+        if (this._itemListIndexRange[1] > UserData.Instance.BucketItems.Count)
+        {
+            this._itemListIndexRange[1]--;
+            this.updateItemsListText(this._itemListIndexRange);
+
+            if (this._vboxIndexSelectedItem >= this._itemListIndexRange[1])
+            {
+                this.MoveSelectionUp();
+            }
+        }
+    }
 
     public void UpdateBucketItemTitle(int listIndex, string text)
     {
@@ -126,18 +149,23 @@ public partial class MainMenuHandler : Node
             description: bucketItem.Description,
             done: bucketItem.Done
         );
-        
+
         this.updateItemsListText(this._itemListIndexRange);
     }
 
     private void updateItemsListText(int[] range)
     {
-        if (range.Length != 2) { throw new ArgumentException($"Invalid Range, Range Array must have exact 2 numbers"); }
+        if (range.Length != 2) { throw new ArgumentException($"Invalid Range, Range Array must have exactly 2 numbers"); }
 
         int rangeDifference = range[1] - range[0];
-        if (rangeDifference > this._itemList.GetChildCount() || rangeDifference <= 0)
+        if (rangeDifference > this._itemList.GetChildCount() || rangeDifference > UserData.Instance.BucketItems.Count || rangeDifference < 0)
         {
             throw new ArgumentException($"Invalid Range Values, Range Difference = {rangeDifference}");
+        }
+
+        foreach (TitleTextBox tb in _itemList.GetChildren().Cast<TitleTextBox>())
+        {
+            tb.updateText( string.Empty );
         }
 
         int vboxIndexCounter = 0;
@@ -161,6 +189,8 @@ public partial class MainMenuHandler : Node
 
     private void flagSelectedItem()
     {
+        if(this._vboxIndexSelectedItem <= -1){ return; }
+        
         var textBox = this._itemList.GetChild<TitleTextBox>(this._vboxIndexSelectedItem);
         textBox.changeBackgroundColor(Colors.White);
         textBox.changeTextColor(Colors.Black);

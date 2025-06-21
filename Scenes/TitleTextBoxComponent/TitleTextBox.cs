@@ -8,7 +8,6 @@ public partial class TitleTextBox : Control
 {
     private Vector2 defaultSize = new Vector2(100f, 50f);
     private const int DefaultMargin = 4;
-    
 
     private Polygon2D _border;
     private Polygon2D _background;
@@ -28,10 +27,7 @@ public partial class TitleTextBox : Control
         //Signals
         this.Resized += this.onResized;
 
-        if (!this.Size.IsEqualApprox(this.defaultSize))
-        {
-            this.onResized();
-        }
+        this.onResized();
     }
 
     public void changeBackgroundColor(Color color) => this._background.Color = color;
@@ -39,12 +35,13 @@ public partial class TitleTextBox : Control
 
     public void changeBorderColor(Color color) => this._border.Color = color;
     public void resetBorderColor() => this._border.Color = Colors.Black;
-    public void changeBorderThickness(int pixelsAmount)
+    public void changeBorderThickness(int pixelsAmount = 0)
     {
         this._borderThickness = pixelsAmount;
 
         //to shrink the background polygon2D to make the border polygon2D more visible
         Vector2[] currentBgSize = this._background.Polygon;
+
         this._background.Polygon = new Vector2[]
         {
             new Vector2(currentBgSize[0].X + pixelsAmount, currentBgSize[0].Y + pixelsAmount),

@@ -93,6 +93,15 @@ public partial class MainMenuManager : Node
 
         if (@event.IsActionReleased(nameof(EventNames.Delete)))
         {
+            int listIndex = this._handler.GetSelectedItemListIndex();
+
+            if (this.currentMode != ActionModes.Scrolling || listIndex == -1)
+            {
+                return;
+            }
+
+            this._handler.DeleteBucketItem(listIndex);
+
             return;
         }
 
