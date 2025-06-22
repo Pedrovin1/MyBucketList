@@ -19,28 +19,35 @@ public partial class MainMenuHandler : Node
         this._sceneRoot = sceneRoot;
 
         this._titleBox = titleBox;
-        this._titleBox.Connect(SignalName.Ready, Callable.From(this.titleBoxStartUp), (uint)GodotObject.ConnectFlags.OneShot);
+        this._titleBox.Connect(SignalName.Ready, Callable.From(this.titleBoxSetup), (uint)GodotObject.ConnectFlags.OneShot);
 
         this._itemList = itemList;
-        this._itemList.Connect(SignalName.Ready, Callable.From(this.itemListStartUp), (uint)GodotObject.ConnectFlags.OneShot);
+        this._itemList.Connect(SignalName.Ready, Callable.From(this.itemListSetup), (uint)GodotObject.ConnectFlags.OneShot);
 
         this._inputBox = inputBox;
+        this._inputBox.Connect(SignalName.Ready, Callable.From(this.inputBoxSetup), (uint)GodotObject.ConnectFlags.OneShot);
 
         this._itemListIndexRange[1] = Math.Clamp(UserData.Instance.BucketItems.Count(), 0, this._itemList.GetChildCount() );
     }
 
-    private void titleBoxStartUp()
+    private void titleBoxSetup()
     {
         this._titleBox.changeBorderThickness(1);
         this._titleBox.changeBorderColor(Colors.White);
         this._titleBox.updateText("MyBucketList");
     }
-    private void itemListStartUp()
+    private void itemListSetup()
     {
         for (int i = 0; i < Math.Clamp(UserData.Instance.BucketItems.Count, 0, this._itemList.GetChildCount()); i++)
         {
             this._itemList.GetChild<TitleTextBox>(i).updateText(UserData.Instance.BucketItems[i].Title);
         }
+    }
+
+    private void inputBoxSetup()
+    {
+        this._inputBox.changeBorderThickness(1);
+        this._inputBox.changeBorderColor(Colors.White);
     }
 
     public int GetSelectedItemListIndex()
@@ -52,7 +59,7 @@ public partial class MainMenuHandler : Node
         }
 
         return this._itemListIndexRange[0] + this._vboxIndexSelectedItem;
-        
+
     }
 
     public void MoveSelectionUp()
@@ -75,7 +82,7 @@ public partial class MainMenuHandler : Node
             this.updateItemsListText(this._itemListIndexRange);
         }
 
-        this.flagSelectedItem();
+        this.highlightSelectedItem();
     }
 
     public void MoveSelectionDown()
@@ -97,7 +104,7 @@ public partial class MainMenuHandler : Node
             this.updateItemsListText(this._itemListIndexRange);
         }
 
-        this.flagSelectedItem();
+        this.highlightSelectedItem();
     }
 
     public void ActivateInputBox()
@@ -187,10 +194,10 @@ public partial class MainMenuHandler : Node
         }
     }
 
-    private void flagSelectedItem()
+    private void highlightSelectedItem()
     {
         if(this._vboxIndexSelectedItem <= -1){ return; }
-        
+
         var textBox = this._itemList.GetChild<TitleTextBox>(this._vboxIndexSelectedItem);
         textBox.changeBackgroundColor(Colors.White);
         textBox.changeTextColor(Colors.Black);

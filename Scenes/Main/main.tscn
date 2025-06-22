@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://byrr2ifqspx85"]
 
 [ext_resource type="Script" uid="uid://bbswnybmv6xr" path="res://Scenes/Main/Main.cs" id="1_1r6ip"]
-[ext_resource type="Script" uid="uid://b1c2vsy5dfu3" path="res://Scripts/MainMenuManager.cs" id="2_5yls4"]
+[ext_resource type="Script" uid="uid://b1c2vsy5dfu3" path="res://Scripts/MainMenu/MainMenuManager.cs" id="2_5yls4"]
 [ext_resource type="PackedScene" uid="uid://bnq4r758sqhsl" path="res://Scenes/TitleTextBoxComponent/TitleTextBoxComponent.tscn" id="2_lixft"]
 [ext_resource type="PackedScene" uid="uid://cgmqms3t7xge4" path="res://Scenes/InputTextBoxComponent/InputTextBoxComponent.tscn" id="3_qw60k"]
 
