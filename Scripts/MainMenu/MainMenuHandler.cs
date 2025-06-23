@@ -50,6 +50,21 @@ public partial class MainMenuHandler : Node
         this._inputBox.changeBorderColor(Colors.White);
     }
 
+    public void SyncChanges()
+    {
+        while (this._itemListIndexRange[1] > UserData.Instance.BucketItems.Count)
+        {
+            this._itemListIndexRange[1]--;
+        }
+        
+        if (this._vboxIndexSelectedItem >= this._itemListIndexRange[1])
+        {
+            this._vboxIndexSelectedItem = this._itemListIndexRange[1] - 1;
+        }
+        
+        this.updateItemsListText(this._itemListIndexRange);
+    }
+
     public int GetSelectedItemListIndex()
     {
         if (this._itemListIndexRange[1] - this._itemListIndexRange[0] <= 0 ||

@@ -1,0 +1,49 @@
+[gd_scene load_steps=4 format=3 uid="uid://cigun52bmqe6d"]
+
+[ext_resource type="Script" uid="uid://b1c2vsy5dfu3" path="res://Scripts/MainMenu/MainMenuManager.cs" id="1_3qspw"]
+[ext_resource type="PackedScene" uid="uid://bnq4r758sqhsl" path="res://Scenes/TitleTextBoxComponent/TitleTextBoxComponent.tscn" id="2_3aehs"]
+[ext_resource type="PackedScene" uid="uid://cgmqms3t7xge4" path="res://Scenes/InputTextBoxComponent/InputTextBoxComponent.tscn" id="3_grkvp"]
+
+[node name="ItemsListMenu" type="Node2D"]
+
+[node name="MainMenuManager" type="Node" parent="."]
+script = ExtResource("1_3qspw")
+
+[node name="MainMenuInterface" type="VBoxContainer" parent="."]
+offset_right = 360.0
+offset_bottom = 350.0
+theme_override_constants/separation = 0
+
+[node name="TitleBox" parent="MainMenuInterface" instance=ExtResource("2_3aehs")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TextLabel" parent="MainMenuInterface/TitleBox/MarginContainer" index="0"]
+horizontal_alignment = 1
+
+[node name="ItemList" type="VBoxContainer" parent="MainMenuInterface"]
+unique_name_in_owner = true
+clip_contents = true
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Item1" parent="MainMenuInterface/ItemList" instance=ExtResource("2_3aehs")]
+layout_mode = 2
+
+[node name="Item2" parent="MainMenuInterface/ItemList" instance=ExtResource("2_3aehs")]
+layout_mode = 2
+
+[node name="Item3" parent="MainMenuInterface/ItemList" instance=ExtResource("2_3aehs")]
+layout_mode = 2
+
+[node name="Item4" parent="MainMenuInterface/ItemList" instance=ExtResource("2_3aehs")]
+layout_mode = 2
+
+[node name="Item5" parent="MainMenuInterface/ItemList" instance=ExtResource("2_3aehs")]
+layout_mode = 2
+
+[node name="InputBox" parent="MainMenuInterface" instance=ExtResource("3_grkvp")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[editable path="MainMenuInterface/TitleBox"]

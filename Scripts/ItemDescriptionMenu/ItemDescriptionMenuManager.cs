@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using CustomComponents;
+using Godot.Bridge;
 
 public partial class ItemDescriptionMenuManager : Node
 {
@@ -12,7 +13,7 @@ public partial class ItemDescriptionMenuManager : Node
     }
 
     private ItemDescriptionMenuHandler _handler;
-    ActionModes currentMode = ActionModes.Scrolling;
+    ActionModes currentMode = ActionModes.Off;
 
     public override void _Ready()
     {
@@ -24,11 +25,13 @@ public partial class ItemDescriptionMenuManager : Node
         InputTextBox _statusBox = GetNode<InputTextBox>("%StatusBox");
 
         //Signals
-        
+        this.GetOwner().GetParent<Main>().ChangeToItemDescriptionScene += this.onChangeToItemDescriptionScene;
+        this.GetOwner().GetParent<Main>().ChangeToItemsListScene += this.onChangeToItemsListScene;
 
         //Handler
         this._handler = new ItemDescriptionMenuHandler
         (
+            itemListIndex: -1,
             sceneRoot: this.GetOwner(),
 
             editableItems: _editableItems,
@@ -37,6 +40,27 @@ public partial class ItemDescriptionMenuManager : Node
             creatingDateBox: _creatingDateBox,
             statusBox: _statusBox
         );
+    }
+
+    private void onChangeToItemDescriptionScene(int itemListIndex)
+    {
+        if (itemListIndex <= -1)
+        {
+            Main.Instance.EmitSignal(Main.SignalName.ChangeToItemsListScene);
+            return;
+        }
+
+        this.currentMode = ActionModes.Scrolling;
+        this.GetOwner<CanvasItem>().Show();
+        this._handler.CurrentItemListIndex = itemListIndex;
+
+        this._handler.UpdateUI();
+    }
+
+    private void onChangeToItemsListScene()
+    {
+        this.currentMode = ActionModes.Off;
+        this.GetOwner<CanvasItem>().Hide();
     }
 
     public override void _UnhandledInput(InputEvent @event)
@@ -67,32 +91,38 @@ public partial class ItemDescriptionMenuManager : Node
         {
             if (this.currentMode != ActionModes.Scrolling) { return; }
 
-            //bufferCurrentText ?
             if (this._handler.ActivateSelectedInputBox())
             {
+                this._handler.SaveSelectedInputBoxTextToBuffer();
                 this.currentMode = ActionModes.ItemEditing;
             }
         }
 
         if (@event.IsActionReleased(nameof(EventNames.Esc)))
+        {
+            if (this.currentMode == ActionModes.ItemEditing)
             {
-                if (this.currentMode == ActionModes.ItemEditing)
-                {
-                    this.currentMode = ActionModes.Scrolling;
-                    //loadPreviousText ?
-                    this._handler.DeactivateSelectedInputBox(wipeText: false);
-                }
-                return;
+                this.currentMode = ActionModes.Scrolling;
+                this._handler.DeactivateSelectedInputBox(loadBuffer: true);
             }
+            return;
+        }
 
         if (@event.IsActionReleased(nameof(EventNames.Enter)))
         {
+            if (this.currentMode == ActionModes.ItemEditing)
+            {
+                this._handler.UpdateItemTextData();
+                this._handler.DeactivateSelectedInputBox(loadBuffer: false);
+            }
+
+            this.currentMode = ActionModes.Scrolling;
             return;
         }
 
         if (@event.IsActionReleased(nameof(EventNames.Delete)))
         {
-            int listIndex = this._handler.GetSelectedItemListIndex();
+            int listIndex = this._handler.CurrentItemListIndex;
 
             if (this.currentMode != ActionModes.Scrolling || listIndex == -1)
             {
@@ -100,28 +130,10 @@ public partial class ItemDescriptionMenuManager : Node
             }
 
             this._handler.DeleteBucketItem(listIndex);
+            Main.Instance.EmitSignal(Main.SignalName.BucketItemDeleted);
 
+            Main.Instance.EmitSignal(Main.SignalName.ChangeToItemsListScene);
             return;
-        }
-
-        if (@event.IsActionReleased(nameof(EventNames.Q)))
-        {
-            if (this.currentMode != ActionModes.Scrolling || this._handler.GetSelectedItemListIndex() == -1)
-            {
-                return;
-            }
-
-            this.currentMode = ActionModes.ItemEditing;
-            this._handler.ActivateInputBox();
-            return;
-        }
-    }
-
-    private void onTextSubmitted(string inputBoxText)
-    {
-        switch (this.currentMode)
-        {
-            default: return;
         }
     }
 }

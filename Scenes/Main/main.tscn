@@ -1,51 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://byrr2ifqspx85"]
+[gd_scene load_steps=4 format=3 uid="uid://byrr2ifqspx85"]
 
 [ext_resource type="Script" uid="uid://bbswnybmv6xr" path="res://Scenes/Main/Main.cs" id="1_1r6ip"]
-[ext_resource type="Script" uid="uid://b1c2vsy5dfu3" path="res://Scripts/MainMenu/MainMenuManager.cs" id="2_5yls4"]
-[ext_resource type="PackedScene" uid="uid://bnq4r758sqhsl" path="res://Scenes/TitleTextBoxComponent/TitleTextBoxComponent.tscn" id="2_lixft"]
-[ext_resource type="PackedScene" uid="uid://cgmqms3t7xge4" path="res://Scenes/InputTextBoxComponent/InputTextBoxComponent.tscn" id="3_qw60k"]
+[ext_resource type="PackedScene" uid="uid://cigun52bmqe6d" path="res://Scenes/ItemsListMenu/ItemsListMenu.tscn" id="2_lixft"]
+[ext_resource type="PackedScene" uid="uid://b65l5erc6nhrn" path="res://Scenes/ItemDescriptionMenu/ItemDescriptionMenu.tscn" id="3_qw60k"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_1r6ip")
 
-[node name="MainMenuManager" type="Node" parent="."]
-script = ExtResource("2_5yls4")
+[node name="ItemsListMenu" parent="." instance=ExtResource("2_lixft")]
 
-[node name="MainMenuInterface" type="VBoxContainer" parent="."]
-offset_right = 357.0
-offset_bottom = 350.0
-theme_override_constants/separation = 0
-
-[node name="TitleBox" parent="MainMenuInterface" instance=ExtResource("2_lixft")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="TextLabel" parent="MainMenuInterface/TitleBox/MarginContainer" index="0"]
-horizontal_alignment = 1
-
-[node name="ItemList" type="VBoxContainer" parent="MainMenuInterface"]
-unique_name_in_owner = true
-clip_contents = true
-layout_mode = 2
-theme_override_constants/separation = 0
-
-[node name="Item1" parent="MainMenuInterface/ItemList" instance=ExtResource("2_lixft")]
-layout_mode = 2
-
-[node name="Item2" parent="MainMenuInterface/ItemList" instance=ExtResource("2_lixft")]
-layout_mode = 2
-
-[node name="Item3" parent="MainMenuInterface/ItemList" instance=ExtResource("2_lixft")]
-layout_mode = 2
-
-[node name="Item4" parent="MainMenuInterface/ItemList" instance=ExtResource("2_lixft")]
-layout_mode = 2
-
-[node name="Item5" parent="MainMenuInterface/ItemList" instance=ExtResource("2_lixft")]
-layout_mode = 2
-
-[node name="InputBox" parent="MainMenuInterface" instance=ExtResource("3_qw60k")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[editable path="MainMenuInterface/TitleBox"]
+[node name="ItemDescriptionMenu" parent="." instance=ExtResource("3_qw60k")]
+visible = false

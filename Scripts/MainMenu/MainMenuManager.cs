@@ -27,6 +27,9 @@ public partial class MainMenuManager : Node
 
         //Signals
         _inputBox.TextSubmitted += this.onTextSubmitted;
+        this.GetOwner().GetParent<Main>().ChangeToItemDescriptionScene += this.onChangeToItemDescriptionScene;
+        this.GetOwner().GetParent<Main>().ChangeToItemsListScene += this.onChangeToItemsListScene;
+        this.GetOwner().GetParent<Main>().BucketItemDeleted += this.onBucketItemDeleted;
 
         //Handler
         this._handler = new MainMenuHandler
@@ -37,6 +40,23 @@ public partial class MainMenuManager : Node
             itemList: _itemList,
             inputBox: _inputBox
         );
+    }
+
+    private void onChangeToItemDescriptionScene(int _)
+    {
+        this.currentMode = ActionModes.Off;
+        this.GetOwner<CanvasItem>().Hide();
+    }
+
+    private void onChangeToItemsListScene()
+    {
+        this.currentMode = ActionModes.Scrolling;
+        this.GetOwner<CanvasItem>().Show();
+    }
+
+    private void onBucketItemDeleted()
+    {
+        this._handler.SyncChanges();
     }
 
     public override void _UnhandledInput(InputEvent @event)
@@ -59,6 +79,9 @@ public partial class MainMenuManager : Node
 
         if (@event.IsActionReleased(nameof(EventNames.Tab)))
         {
+            if(this.currentMode != ActionModes.Scrolling){ return; }
+
+            Main.Instance.EmitSignal(Main.SignalName.ChangeToItemDescriptionScene, this._handler.GetSelectedItemListIndex());
             return;
         }
 

@@ -39,5 +39,6 @@ public partial class InputTextBox : TitleTextBox
     }
 
     public void wipeInputText() => this._inputNode.Text = string.Empty;
+    public string getCurrentInputText() => this._inputNode.Text ?? string.Empty;
 
 }
