@@ -6,7 +6,6 @@ using System.Linq;
 public class ItemDescriptionMenuHandler
 {
     public int CurrentItemListIndex {get; set;} = -1;
-    public string TextBuffer { get; private set; } = string.Empty;
 
     private Node _sceneRoot;
     private VBoxContainer _editableItems;
@@ -58,28 +57,24 @@ public class ItemDescriptionMenuHandler
     public bool ActivateSelectedInputBox()
     {
         if (this._vboxEditableIndexSelectedItem <= -1) { return false; }
+        var inputBox = this._editableItems.GetChild<InputTextBox>(this._vboxEditableIndexSelectedItem);
 
-        this._editableItems.GetChild<InputTextBox>(this._vboxEditableIndexSelectedItem).activateKeyboardTextListening();
+        inputBox.activateKeyboardTextListening();
+
         return true;
     }
 
-    public void SaveSelectedInputBoxTextToBuffer()
-    {
-        this.TextBuffer = this._editableItems.GetChild<InputTextBox>(this._vboxEditableIndexSelectedItem).getCurrentInputText();
-    }
-
-    public void DeactivateSelectedInputBox(bool loadBuffer = false)
+    public void DeactivateSelectedInputBox(bool saveChanges = false)
     {
         var inputBox = this._editableItems.GetChild<InputTextBox>(this._vboxEditableIndexSelectedItem);
 
-        if (loadBuffer) { inputBox.updateText(this.TextBuffer); }
-        inputBox.stopKeyboardTextListening();
+        inputBox.stopKeyboardTextListening(saveChanges: saveChanges, wipeInputText: true);
     }
 
     public void UpdateItemTextData()
     {
         var inputBox = this._editableItems.GetChild<InputTextBox>(this._vboxEditableIndexSelectedItem);
-        string text = inputBox.getCurrentInputText();
+        string text = inputBox.getCurrentTitleText();
 
         BucketItem item = UserData.Instance.BucketItems[this.CurrentItemListIndex];
 

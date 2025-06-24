@@ -55,6 +55,7 @@ public partial class TitleTextBox : Control
     }
 
     public void updateText(string newText) => this._text.Text = newText;
+    public string getCurrentTitleText() => this._text.Text; 
     public void showTextLabel() => this._text.Show();
     public void hideTextLabel() => this._text.Hide();
     public void changeTextColor(Color color) => this._text.AddThemeColorOverride("default_color", color);

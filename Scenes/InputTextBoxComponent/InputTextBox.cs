@@ -26,19 +26,30 @@ public partial class InputTextBox : TitleTextBox
 
     public void activateKeyboardTextListening()
     {
+
+        this.hideTextLabel();
+        this._inputNode.Show();
+
+        this._inputNode.Text = getCurrentTitleText();
+
         this._inputNode.Editable = true;
         this._inputNode.FocusMode = FocusModeEnum.Click;
         this._inputNode.CallDeferred(LineEdit.MethodName.GrabFocus);
     }
 
-    public void stopKeyboardTextListening()
+    public void stopKeyboardTextListening(bool saveChanges = false, bool wipeInputText = false)
     {
+        this.showTextLabel();
+        this._inputNode.Hide();
+
+        if (saveChanges) { this.updateText(this._inputNode.Text); }
+        if (wipeInputText) { this.wipeInputText(); }
+        
+
         this._inputNode.Editable = false;
         this._inputNode.FocusMode = FocusModeEnum.None;
         this._inputNode.CallDeferred(LineEdit.MethodName.ReleaseFocus);
     }
 
     public void wipeInputText() => this._inputNode.Text = string.Empty;
-    public string getCurrentInputText() => this._inputNode.Text ?? string.Empty;
-
 }

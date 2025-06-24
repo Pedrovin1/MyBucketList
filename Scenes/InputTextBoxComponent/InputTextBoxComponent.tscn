@@ -34,6 +34,7 @@ theme_override_constants/margin_right = 4
 
 [node name="InputLine" type="LineEdit" parent="MarginContainer"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 focus_mode = 0
 mouse_filter = 2
@@ -50,10 +51,7 @@ caret_blink = true
 
 [node name="TextLabel" type="RichTextLabel" parent="MarginContainer"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 bbcode_enabled = true
-text = "Placeholder"
 scroll_active = false
-autowrap_mode = 0
 vertical_alignment = 1

@@ -93,7 +93,6 @@ public partial class ItemDescriptionMenuManager : Node
 
             if (this._handler.ActivateSelectedInputBox())
             {
-                this._handler.SaveSelectedInputBoxTextToBuffer();
                 this.currentMode = ActionModes.ItemEditing;
             }
         }
@@ -103,8 +102,16 @@ public partial class ItemDescriptionMenuManager : Node
             if (this.currentMode == ActionModes.ItemEditing)
             {
                 this.currentMode = ActionModes.Scrolling;
-                this._handler.DeactivateSelectedInputBox(loadBuffer: true);
+                this._handler.DeactivateSelectedInputBox(saveChanges: false);
+                return;
             }
+
+            if (this.currentMode == ActionModes.Scrolling)
+            {
+                Main.Instance.EmitSignal(Main.SignalName.ChangeToItemsListScene);
+                return;
+            }
+
             return;
         }
 
@@ -113,7 +120,7 @@ public partial class ItemDescriptionMenuManager : Node
             if (this.currentMode == ActionModes.ItemEditing)
             {
                 this._handler.UpdateItemTextData();
-                this._handler.DeactivateSelectedInputBox(loadBuffer: false);
+                this._handler.DeactivateSelectedInputBox(saveChanges: true);
             }
 
             this.currentMode = ActionModes.Scrolling;

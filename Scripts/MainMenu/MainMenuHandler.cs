@@ -143,21 +143,22 @@ public partial class MainMenuHandler : Node
             this.updateItemsListText(this._itemListIndexRange);
         }
     }
-    
+
     public void DeleteBucketItem(int listIndex)
     {
         UserData.Instance.BucketItems.RemoveAt(listIndex);
+        this.SyncChanges();
 
-        if (this._itemListIndexRange[1] > UserData.Instance.BucketItems.Count)
-        {
-            this._itemListIndexRange[1]--;
-            this.updateItemsListText(this._itemListIndexRange);
+        // if (this._itemListIndexRange[1] > UserData.Instance.BucketItems.Count)
+        // {
+        //     this._itemListIndexRange[1]--;
+        //     this.updateItemsListText(this._itemListIndexRange);
 
-            if (this._vboxIndexSelectedItem >= this._itemListIndexRange[1])
-            {
-                this.MoveSelectionUp();
-            }
-        }
+        //     if (this._vboxIndexSelectedItem >= this._itemListIndexRange[1])
+        //     {
+        //         this.MoveSelectionUp();
+        //     }
+        // }
     }
 
     public void UpdateBucketItemTitle(int listIndex, string text)
