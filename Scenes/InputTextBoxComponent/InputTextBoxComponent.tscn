@@ -39,6 +39,7 @@ layout_mode = 2
 focus_mode = 0
 mouse_filter = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_6fmrl")
+text = "sdfsdfsd"
 editable = false
 context_menu_enabled = false
 emoji_menu_enabled = false

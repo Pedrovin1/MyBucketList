@@ -54,15 +54,17 @@ public partial class MainMenuHandler : Node
     {
         while (this._itemListIndexRange[1] > UserData.Instance.BucketItems.Count)
         {
+            this._itemListIndexRange[0]--;
+            this._itemListIndexRange[0] = Math.Max(0, this._itemListIndexRange[0]);
+
             this._itemListIndexRange[1]--;
         }
-        
-        if (this._vboxIndexSelectedItem >= this._itemListIndexRange[1])
-        {
-            this._vboxIndexSelectedItem = this._itemListIndexRange[1] - 1;
-        }
-        
+
+        this._vboxIndexSelectedItem = Math.Clamp(this._vboxIndexSelectedItem, -1, UserData.Instance.BucketItems.Count - 1);
+
         this.updateItemsListText(this._itemListIndexRange);
+        this.resetAllItemTextBoxesStyles();
+        this.highlightSelectedItem();
     }
 
     public int GetSelectedItemListIndex()
@@ -110,12 +112,12 @@ public partial class MainMenuHandler : Node
         {
             this._vboxIndexSelectedItem = this._itemList.GetChildCount() - 1;
 
-            if(this._itemListIndexRange[1] + 1 <= UserData.Instance.BucketItems.Count)
+            if (this._itemListIndexRange[1] + 1 <= UserData.Instance.BucketItems.Count)
             {
                 this._itemListIndexRange[0]++;
                 this._itemListIndexRange[1]++;
             }
-            
+
             this.updateItemsListText(this._itemListIndexRange);
         }
 
@@ -128,9 +130,7 @@ public partial class MainMenuHandler : Node
     }
     public void DeactivateInputBox(bool wipeText = true)
     {
-        if (wipeText) { this._inputBox.wipeInputText(); }
-
-        this._inputBox.stopKeyboardTextListening();
+        this._inputBox.stopKeyboardTextListening(saveChanges: false, wipeInputText: wipeText);
     }
 
     public void AddBucketItem(string titleText)

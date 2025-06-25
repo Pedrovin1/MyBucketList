@@ -119,8 +119,8 @@ public partial class ItemDescriptionMenuManager : Node
         {
             if (this.currentMode == ActionModes.ItemEditing)
             {
-                this._handler.UpdateItemTextData();
                 this._handler.DeactivateSelectedInputBox(saveChanges: true);
+                this._handler.UpdateItemTextData();
             }
 
             this.currentMode = ActionModes.Scrolling;

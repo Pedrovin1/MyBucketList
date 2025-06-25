@@ -58,8 +58,8 @@ public partial class TitleTextBox : Control
     public string getCurrentTitleText() => this._text.Text; 
     public void showTextLabel() => this._text.Show();
     public void hideTextLabel() => this._text.Hide();
-    public void changeTextColor(Color color) => this._text.AddThemeColorOverride("default_color", color);
-    public void resetTextColor() => this._text.RemoveThemeColorOverride("default_color");
+    public virtual void changeTextColor(Color color) => this._text.AddThemeColorOverride("default_color", color);
+    public virtual void resetTextColor() => this._text.RemoveThemeColorOverride("default_color");
 
     public void onResized()
     {

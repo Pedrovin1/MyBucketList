@@ -44,7 +44,7 @@ public partial class InputTextBox : TitleTextBox
 
         if (saveChanges) { this.updateText(this._inputNode.Text); }
         if (wipeInputText) { this.wipeInputText(); }
-        
+
 
         this._inputNode.Editable = false;
         this._inputNode.FocusMode = FocusModeEnum.None;
@@ -52,4 +52,19 @@ public partial class InputTextBox : TitleTextBox
     }
 
     public void wipeInputText() => this._inputNode.Text = string.Empty;
+
+    public override void changeTextColor(Color color)
+    {
+        this._inputNode.AddThemeColorOverride("font_uneditable_color", color);
+        this._inputNode.AddThemeColorOverride("font_color", color);
+        this._inputNode.AddThemeColorOverride("caret_color", color);
+        base.changeTextColor(color);
+    }
+    public override void resetTextColor()
+    {
+        this._inputNode.RemoveThemeColorOverride("font_uneditable_color");
+        this._inputNode.RemoveThemeColorOverride("font_color");
+        this._inputNode.RemoveThemeColorOverride("caret_color");
+        base.resetTextColor();
+    }
 }

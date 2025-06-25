@@ -52,6 +52,7 @@ public partial class MainMenuManager : Node
     {
         this.currentMode = ActionModes.Scrolling;
         this.GetOwner<CanvasItem>().Show();
+        this._handler.SyncChanges();
     }
 
     private void onBucketItemDeleted()
