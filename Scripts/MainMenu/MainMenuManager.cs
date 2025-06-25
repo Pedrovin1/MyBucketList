@@ -27,9 +27,11 @@ public partial class MainMenuManager : Node
 
         //Signals
         _inputBox.TextSubmitted += this.onTextSubmitted;
-        this.GetOwner().GetParent<Main>().ChangeToItemDescriptionScene += this.onChangeToItemDescriptionScene;
-        this.GetOwner().GetParent<Main>().ChangeToItemsListScene += this.onChangeToItemsListScene;
-        this.GetOwner().GetParent<Main>().BucketItemDeleted += this.onBucketItemDeleted;
+        
+        var mainRootNode = this.GetOwner().GetParent<Main>(); 
+        mainRootNode.ChangeToItemDescriptionScene += this.onChangeToItemDescriptionScene;
+        mainRootNode.ChangeToItemsListScene += this.onChangeToItemsListScene;
+        mainRootNode.BucketItemDeleted += this.onBucketItemDeleted;
 
         //Handler
         this._handler = new MainMenuHandler
@@ -63,11 +65,14 @@ public partial class MainMenuManager : Node
     public override void _UnhandledInput(InputEvent @event)
     {
         if (this.currentMode == ActionModes.Off) { return; }
+        Viewport viewport = GetViewport();
 
         if (@event.IsActionReleased(nameof(EventNames.ArrowUp)))
         {
             if (this.currentMode != ActionModes.Scrolling) { return; }
             this._handler.MoveSelectionUp();
+
+            viewport.SetInputAsHandled();
             return;
         }
 
@@ -75,12 +80,16 @@ public partial class MainMenuManager : Node
         {
             if (this.currentMode != ActionModes.Scrolling) { return; }
             this._handler.MoveSelectionDown();
+
+            viewport.SetInputAsHandled();
             return;
         }
 
         if (@event.IsActionReleased(nameof(EventNames.Tab)))
         {
             if(this.currentMode != ActionModes.Scrolling){ return; }
+
+            viewport.SetInputAsHandled();
 
             Main.Instance.EmitSignal(Main.SignalName.ChangeToItemDescriptionScene, this._handler.GetSelectedItemListIndex());
             return;
@@ -93,8 +102,11 @@ public partial class MainMenuManager : Node
                 this.currentMode = ActionModes.Scrolling;
                 this._handler.DeactivateInputBox(wipeText: true);
             }
+
+            viewport.SetInputAsHandled();
             return;
         }
+
         if (@event.IsActionReleased(nameof(EventNames.Space)))
         {
             if (this.currentMode == ActionModes.Scrolling)
@@ -102,6 +114,8 @@ public partial class MainMenuManager : Node
                 this.currentMode = ActionModes.ItemCreation;
                 this._handler.ActivateInputBox();
             }
+
+            viewport.SetInputAsHandled();
             return;
         }
 
@@ -126,6 +140,7 @@ public partial class MainMenuManager : Node
 
             this._handler.DeleteBucketItem(listIndex);
 
+            viewport.SetInputAsHandled();
             return;
         }
 
@@ -138,6 +153,8 @@ public partial class MainMenuManager : Node
 
             this.currentMode = ActionModes.ItemEditing;
             this._handler.ActivateInputBox();
+
+            viewport.SetInputAsHandled();
             return;
         }
 

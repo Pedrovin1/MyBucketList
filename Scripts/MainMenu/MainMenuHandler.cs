@@ -65,6 +65,7 @@ public partial class MainMenuHandler : Node
         this.updateItemsListText(this._itemListIndexRange);
         this.resetAllItemTextBoxesStyles();
         this.highlightSelectedItem();
+
     }
 
     public int GetSelectedItemListIndex()

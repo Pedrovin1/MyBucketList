@@ -67,10 +67,14 @@ public partial class ItemDescriptionMenuManager : Node
     {
         if (this.currentMode == ActionModes.Off) { return; }
 
+        Viewport viewport = GetViewport();
+
         if (@event.IsActionReleased(nameof(EventNames.ArrowUp)))
         {
             if (this.currentMode != ActionModes.Scrolling) { return; }
             this._handler.MoveSelectionUp();
+
+            viewport.SetInputAsHandled();
             return;
         }
 
@@ -78,12 +82,16 @@ public partial class ItemDescriptionMenuManager : Node
         {
             if (this.currentMode != ActionModes.Scrolling) { return; }
             this._handler.MoveSelectionDown();
+
+            viewport.SetInputAsHandled();
             return;
         }
 
         if (@event.IsActionReleased(nameof(EventNames.Tab)))
         {
             this._handler.UpdateItemIsDoneData();
+
+            viewport.SetInputAsHandled();
             return;
         }
 
@@ -95,23 +103,26 @@ public partial class ItemDescriptionMenuManager : Node
             {
                 this.currentMode = ActionModes.ItemEditing;
             }
+
+            viewport.SetInputAsHandled();
         }
 
         if (@event.IsActionReleased(nameof(EventNames.Esc)))
         {
-            if (this.currentMode == ActionModes.ItemEditing)
-            {
-                this.currentMode = ActionModes.Scrolling;
-                this._handler.DeactivateSelectedInputBox(saveChanges: false);
-                return;
-            }
 
-            if (this.currentMode == ActionModes.Scrolling)
+            switch (currentMode)
             {
-                Main.Instance.EmitSignal(Main.SignalName.ChangeToItemsListScene);
-                return;
+                case ActionModes.ItemEditing:
+                    this.currentMode = ActionModes.Scrolling;
+                    this._handler.DeactivateSelectedInputBox(saveChanges: false);
+                break;
+                
+                case ActionModes.Scrolling:
+                    Main.Instance.EmitSignal(Main.SignalName.ChangeToItemsListScene);
+                break;
             }
-
+          
+            viewport.SetInputAsHandled();
             return;
         }
 
@@ -124,6 +135,8 @@ public partial class ItemDescriptionMenuManager : Node
             }
 
             this.currentMode = ActionModes.Scrolling;
+
+            viewport.SetInputAsHandled();
             return;
         }
 
@@ -138,6 +151,8 @@ public partial class ItemDescriptionMenuManager : Node
 
             this._handler.DeleteBucketItem(listIndex);
             Main.Instance.EmitSignal(Main.SignalName.BucketItemDeleted);
+
+            viewport.SetInputAsHandled();
 
             Main.Instance.EmitSignal(Main.SignalName.ChangeToItemsListScene);
             return;
