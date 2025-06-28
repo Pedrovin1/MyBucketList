@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 public partial class UserData : Node
 {
@@ -50,14 +51,14 @@ public partial class UserData : Node
         this.BucketItems = parseResult ?? new();
     }
 
-    public async void ExportData()
+    public async Task ExportData()
     {
         string jsonString = System.Text.Json.JsonSerializer.Serialize(this.BucketItems);
         string saveFilePath = this.UserDataFolderPath + @"\" + UserData.UserDataFileName;
 
         int counter = 0;
         bool retry = true;
-        const int maxRetries = 3;
+        const int maxRetries = 5;
 
         while (counter < maxRetries && retry)
         {
@@ -85,6 +86,15 @@ public partial class UserData : Node
                 retry = true;
                 await ToSignal(GetTree().CreateTimer(0.3d), Timer.SignalName.Timeout);
             }
+        }
+    }
+
+    public override async void _Notification(int what)
+    {
+        if (what == NotificationWMCloseRequest)
+        {
+            await this.ExportData();
+            GetTree().Quit();
         }
     }
 }

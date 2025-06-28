@@ -97,11 +97,16 @@ public partial class MainMenuManager : Node
 
         if (@event.IsActionReleased(nameof(EventNames.Esc)))
         {
-            if (this.currentMode == ActionModes.ItemCreation || this.currentMode == ActionModes.ItemEditing)
+            if (this.currentMode == ActionModes.Scrolling)
             {
-                this.currentMode = ActionModes.Scrolling;
-                this._handler.DeactivateInputBox(wipeText: true);
+                this.GetTree().Root.PropagateNotification((int)Node.NotificationWMCloseRequest);
             }
+
+            if (this.currentMode == ActionModes.ItemCreation || this.currentMode == ActionModes.ItemEditing)
+                {
+                    this.currentMode = ActionModes.Scrolling;
+                    this._handler.DeactivateInputBox(wipeText: true);
+                }
 
             viewport.SetInputAsHandled();
             return;
