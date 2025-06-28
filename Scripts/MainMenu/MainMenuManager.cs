@@ -165,6 +165,15 @@ public partial class MainMenuManager : Node
 
         if (@event.IsActionReleased(nameof(EventNames.R)))
         {
+            if(this.currentMode != ActionModes.Scrolling){ return; }
+
+            viewport.SetInputAsHandled();
+
+            Random rng = new();
+            int randIndex = rng.Next(0, UserData.Instance.BucketItems.Count);
+
+            Main.Instance.EmitSignal(Main.SignalName.ChangeToItemDescriptionScene, randIndex);
+
             return;
         }
 

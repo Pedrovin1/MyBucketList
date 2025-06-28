@@ -16,7 +16,7 @@ public class BucketItem
     {
         //this.ID = 
 
-        this.Title = title;
+        this.Title = title.Trim() == string.Empty ? "Unnamed" : title;
 
         this.Description = string.Empty;
         this.CreatedDate = DateTime.Now;
@@ -36,7 +36,7 @@ public class BucketItem
 
     public void UpdateItemData(string title, string description, bool done)
     {
-        this.Title = title;
+        this.Title = title.Trim() == string.Empty ? "Unnamed" : title;
         this.Description = description;
         this.Done = done;
 

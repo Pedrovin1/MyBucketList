@@ -44,7 +44,7 @@ public partial class ItemDescriptionMenuManager : Node
 
     private void onChangeToItemDescriptionScene(int itemListIndex)
     {
-        if (itemListIndex <= -1)
+        if (itemListIndex <= -1 || itemListIndex >= UserData.Instance.BucketItems.Count)
         {
             Main.Instance.EmitSignal(Main.SignalName.ChangeToItemsListScene);
             return;
