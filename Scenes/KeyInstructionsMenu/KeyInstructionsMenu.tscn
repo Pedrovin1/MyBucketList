@@ -1,0 +1,30 @@
+[gd_scene load_steps=2 format=3 uid="uid://bijy78qbbhaxr"]
+
+[ext_resource type="Script" uid="uid://dfn3ctui6wrs5" path="res://Scenes/KeyInstructionsMenu/KeyInstructionsMenu.cs" id="1_088ud"]
+
+[node name="KeyInstructionsMenu" type="Node2D"]
+script = ExtResource("1_088ud")
+
+[node name="Background" type="Polygon2D" parent="."]
+position = Vector2(167, 215)
+color = Color(0, 0, 0, 1)
+polygon = PackedVector2Array(-167, -215, 193, -215, 193, -42.5776, 193, 136, -167, 136)
+uv = PackedVector2Array(-142, -40.6667, 167.333, -35.3333, 164.4, 80.5337, -150.933, 73.2003)
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(360, 350)
+offset_right = 360.0
+offset_bottom = 350.0
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="KeyInstructionsText" type="RichTextLabel" parent="PanelContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+bbcode_enabled = true
+text = "Placeholder"

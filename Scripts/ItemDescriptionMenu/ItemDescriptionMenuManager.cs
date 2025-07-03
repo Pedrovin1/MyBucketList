@@ -115,13 +115,13 @@ public partial class ItemDescriptionMenuManager : Node
                 case ActionModes.ItemEditing:
                     this.currentMode = ActionModes.Scrolling;
                     this._handler.DeactivateSelectedInputBox(saveChanges: false);
-                break;
-                
+                    break;
+
                 case ActionModes.Scrolling:
                     Main.Instance.EmitSignal(Main.SignalName.ChangeToItemsListScene);
-                break;
+                    break;
             }
-          
+
             viewport.SetInputAsHandled();
             return;
         }
@@ -156,6 +156,23 @@ public partial class ItemDescriptionMenuManager : Node
 
             Main.Instance.EmitSignal(Main.SignalName.ChangeToItemsListScene);
             return;
+        }
+
+        if (@event.IsAction(nameof(EventNames.E)))
+        {
+            if (@event.IsActionPressed(nameof(EventNames.E)))
+            {
+                Main.Instance.EmitSignal(Main.SignalName.ChangeKeyInstructionsMenuVisibility, true);
+                viewport.SetInputAsHandled();
+                return;
+            }
+            
+            if (@event.IsActionReleased(nameof(EventNames.E)))
+            {
+                Main.Instance.EmitSignal(Main.SignalName.ChangeKeyInstructionsMenuVisibility, false);
+                viewport.SetInputAsHandled();
+                return;
+            }
         }
     }
 }

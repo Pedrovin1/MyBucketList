@@ -1,0 +1,9 @@
+^v        - Selecionar
+Tab       - Acessar
+Esc       - Sair/Cancelar
+Q         - Editar
+R         - Aleatório
+Espaço    - Modo Adicionar
+Shift+Tab - Modo Pesquisa
+Delete    - Deletar
+E         - Lista Botões

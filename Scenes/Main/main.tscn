@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://byrr2ifqspx85"]
+[gd_scene load_steps=5 format=3 uid="uid://byrr2ifqspx85"]
 
 [ext_resource type="Script" uid="uid://bbswnybmv6xr" path="res://Scenes/Main/Main.cs" id="1_1r6ip"]
 [ext_resource type="PackedScene" uid="uid://cigun52bmqe6d" path="res://Scenes/ItemsListMenu/ItemsListMenu.tscn" id="2_lixft"]
 [ext_resource type="PackedScene" uid="uid://b65l5erc6nhrn" path="res://Scenes/ItemDescriptionMenu/ItemDescriptionMenu.tscn" id="3_qw60k"]
+[ext_resource type="PackedScene" uid="uid://bijy78qbbhaxr" path="res://Scenes/KeyInstructionsMenu/KeyInstructionsMenu.tscn" id="4_5yls4"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_1r6ip")
@@ -10,4 +11,7 @@ script = ExtResource("1_1r6ip")
 [node name="ItemsListMenu" parent="." instance=ExtResource("2_lixft")]
 
 [node name="ItemDescriptionMenu" parent="." instance=ExtResource("3_qw60k")]
+visible = false
+
+[node name="KeyInstructionsMenu" parent="." instance=ExtResource("4_5yls4")]
 visible = false

@@ -9,6 +9,9 @@ public partial class Main : Node2D
     public delegate void ChangeToItemsListSceneEventHandler();
 
     [Signal]
+    public delegate void ChangeKeyInstructionsMenuVisibilityEventHandler(bool visible);
+
+    [Signal]
     public delegate void BucketItemDeletedEventHandler();
 
 

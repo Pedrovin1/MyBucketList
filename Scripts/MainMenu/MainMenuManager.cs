@@ -177,9 +177,18 @@ public partial class MainMenuManager : Node
             return;
         }
 
-        if (@event.IsActionReleased(nameof(EventNames.E)))
+        if (@event.IsAction(nameof(EventNames.E)))
         {
-            return;
+            if (@event.IsActionPressed(nameof(EventNames.E)))
+            {
+                Main.Instance.EmitSignal(Main.SignalName.ChangeKeyInstructionsMenuVisibility, true);
+                viewport.SetInputAsHandled();
+            }
+            if (@event.IsActionReleased(nameof(EventNames.E)))
+            {
+                Main.Instance.EmitSignal(Main.SignalName.ChangeKeyInstructionsMenuVisibility, false);
+                viewport.SetInputAsHandled();
+            }
         }
     }
 

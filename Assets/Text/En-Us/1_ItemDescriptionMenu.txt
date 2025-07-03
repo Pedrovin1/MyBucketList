@@ -1,0 +1,5 @@
+^v     - Scroll
+Tab    - Mark as Done
+Esc    - Exit/Cancel
+Q      - Edit Mode
+Delete - Delete Item
