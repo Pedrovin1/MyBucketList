@@ -2,8 +2,8 @@
 Tab       - Access Item
 Esc       - Exit/Cancel
 R         - Random Item
-Q         - Edition Mode
-Espaço    - Creation Mode
+Q         - Edit Mode
+Space     - Creation Mode
 Shift+Tab - Search Mode
 Delete    - Delete Item
-E 		  - Command List Menu
+E         - Command List Menu

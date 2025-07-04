@@ -1,3 +1,4 @@
+using CustomComponents;
 using Godot;
 using System;
 using System.Collections.Generic;
@@ -30,9 +31,9 @@ public partial class KeyInstructionsMenu : Node2D
 
         //Signals
         Main mainNode = GetNode<Main>("/root/Main");
-        mainNode.ChangeToItemDescriptionScene += this.onChangeToItemDescriptionScene;
-        mainNode.ChangeToItemsListScene += this.onChangeToItemsListScene;
-        mainNode.ChangeKeyInstructionsMenuVisibility += this.onChangeVisibility;
+             mainNode.ChangeToItemDescriptionScene += this.onChangeToItemDescriptionScene;
+             mainNode.ChangeToItemsListScene += this.onChangeToItemsListScene;
+             mainNode.ChangeKeyInstructionsMenuVisibility += this.onChangeVisibility;
 
         //Initializations
         this._supportedLanguages.AddRange(Godot.DirAccess.GetDirectoriesAt(LanguageTranslationsDirectory));
@@ -42,7 +43,13 @@ public partial class KeyInstructionsMenu : Node2D
             this._selectedLanguage = this._defaultLanguage;
         }
 
-        this.onChangeToItemsListScene(); //Just to initialize the label text
+        this.onChangeToItemsListScene(); //To initialize the label text
+
+        //Background Box
+        var backgroundBox = this.GetNode<TitleTextBox>("%BackgroundBox");
+            backgroundBox.changeBorderThickness(3);
+            backgroundBox.changeBorderColor(Colors.White);
+            backgroundBox.hideTextLabel();
     }
 
     private void onChangeVisibility(bool visible)
@@ -60,7 +67,8 @@ public partial class KeyInstructionsMenu : Node2D
 
         string text = Godot.FileAccess.GetFileAsString(path);
 
-        this._label.Text = text;
+        this._label.Text = string.Empty;
+        this._label.AddText(text);
     }
 
     private void onChangeToItemsListScene()
@@ -72,6 +80,7 @@ public partial class KeyInstructionsMenu : Node2D
 
         string text = Godot.FileAccess.GetFileAsString(path);
 
-        this._label.Text = text;
+        this._label.Text = string.Empty;
+        this._label.AddText(text);
     }
 }
