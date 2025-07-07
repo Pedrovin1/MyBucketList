@@ -1,6 +1,7 @@
 using CustomComponents;
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 public partial class MainMenuHandler : Node
@@ -8,26 +9,27 @@ public partial class MainMenuHandler : Node
     private Node _sceneRoot;
 
     private TitleTextBox _titleBox;
-    private VBoxContainer _itemList;
+    private VBoxContainer _itemListVbox;
     private InputTextBox _inputBox;
 
     private int _vboxIndexSelectedItem = -1;
-    private int[] _itemListIndexRange = { 0, 0 }; //(Inclusive - Exclusive)
+    private List<BucketItem> _currentItemsList;
+    private int _listIndexOffset = 0; //startFromIndex
 
-    public MainMenuHandler(Node sceneRoot, TitleTextBox titleBox, VBoxContainer itemList, InputTextBox inputBox)
+    public MainMenuHandler(Node sceneRoot, TitleTextBox titleBox, VBoxContainer itemListVBox, InputTextBox inputBox)
     {
+        this._currentItemsList = UserData.Instance.BucketItems.ToList();
+        
         this._sceneRoot = sceneRoot;
 
         this._titleBox = titleBox;
         this._titleBox.Connect(SignalName.Ready, Callable.From(this.titleBoxSetup), (uint)GodotObject.ConnectFlags.OneShot);
 
-        this._itemList = itemList;
-        this._itemList.Connect(SignalName.Ready, Callable.From(this.itemListSetup), (uint)GodotObject.ConnectFlags.OneShot);
+        this._itemListVbox = itemListVBox;
+        this._itemListVbox.Connect(SignalName.Ready, Callable.From(this.onLocalListChanged), (uint)GodotObject.ConnectFlags.OneShot);
 
         this._inputBox = inputBox;
         this._inputBox.Connect(SignalName.Ready, Callable.From(this.inputBoxSetup), (uint)GodotObject.ConnectFlags.OneShot);
-
-        this._itemListIndexRange[1] = Math.Clamp(UserData.Instance.BucketItems.Count(), 0, this._itemList.GetChildCount() );
     }
 
     private void titleBoxSetup()
@@ -36,12 +38,21 @@ public partial class MainMenuHandler : Node
         this._titleBox.changeBorderColor(Colors.White);
         this._titleBox.updateText("MyBucketList");
     }
-    private void itemListSetup()
+    private void onLocalListChanged()
     {
-        for (int i = 0; i < Math.Clamp(UserData.Instance.BucketItems.Count, 0, this._itemList.GetChildCount()); i++)
-        {
-            this._itemList.GetChild<TitleTextBox>(i).updateText(UserData.Instance.BucketItems[i].Title);
-        }
+        
+        this.updateItemsListText(this._listIndexOffset);
+
+        // for (int i = 0; i < Math.Clamp(UserData.Instance.BucketItems.Count, 0, this._itemListVbox.GetChildCount()); i++)
+        // {
+        //     this._itemListVbox.GetChild<TitleTextBox>(i).updateText(UserData.Instance.BucketItems[i].Title);
+        // }
+    }
+
+    public void ChangeItemsList(IEnumerable<BucketItem> newList)
+    {
+        this._currentItemsList = newList.ToList();
+        this.onLocalListChanged();
     }
 
     private void inputBoxSetup()
@@ -50,54 +61,66 @@ public partial class MainMenuHandler : Node
         this._inputBox.changeBorderColor(Colors.White);
     }
 
-    public void SyncChanges()
+    public void SyncChanges() //TODO: deal with null references of deleted items
     {
-        while (this._itemListIndexRange[1] > UserData.Instance.BucketItems.Count)
+        foreach (BucketItem item in this._currentItemsList)
         {
-            this._itemListIndexRange[0]--;
-            this._itemListIndexRange[0] = Math.Max(0, this._itemListIndexRange[0]);
-
-            this._itemListIndexRange[1]--;
+            if (item is null){ this._currentItemsList.Remove(item); }
         }
 
-        this._vboxIndexSelectedItem = Math.Clamp(this._vboxIndexSelectedItem, -1, UserData.Instance.BucketItems.Count - 1);
+        if (this._currentItemsList.Count > this._itemListVbox.GetChildCount())
+            {
+                //it can probably be turned into an O(1) operation
+                while (this._listIndexOffset + this._itemListVbox.GetChildCount() > this._currentItemsList.Count)
+                {
+                    this._listIndexOffset--;
+                }
+            }
+            else
+            {
+                this._listIndexOffset = 0;
+            }
+        
 
-        this.updateItemsListText(this._itemListIndexRange);
+        this._vboxIndexSelectedItem = Math.Clamp(this._vboxIndexSelectedItem, -1, this._currentItemsList.Count - 1);
+
+        this.updateItemsListText(this._listIndexOffset);
         this.resetAllItemTextBoxesStyles();
         this.highlightSelectedItem();
 
     }
 
-    public int GetSelectedItemListIndex()
+    public int GetSelectedItem_RootListIndex()
     {
-        if (this._itemListIndexRange[1] - this._itemListIndexRange[0] <= 0 ||
-           this._vboxIndexSelectedItem == -1)
+        if (this._currentItemsList.Count <= 0 || this._vboxIndexSelectedItem == -1)
         {
             return -1;
         }
 
-        return this._itemListIndexRange[0] + this._vboxIndexSelectedItem;
+        int localListindex = this._vboxIndexSelectedItem + this._listIndexOffset;
+        BucketItem selectedItem = this._currentItemsList[localListindex];
 
+        //might cause different reference errors
+        return UserData.Instance.BucketItems.IndexOf(selectedItem); 
     }
 
     public void MoveSelectionUp()
     {
         this._vboxIndexSelectedItem--;
-        this._vboxIndexSelectedItem = Math.Clamp(this._vboxIndexSelectedItem, -1, UserData.Instance.BucketItems.Count - 1);
+        this._vboxIndexSelectedItem = Math.Clamp(this._vboxIndexSelectedItem, -1, this._currentItemsList.Count - 1);
         this.resetAllItemTextBoxesStyles();
 
         if (this._vboxIndexSelectedItem <= -1)
         {
-            if (this._itemListIndexRange[0] <= 0)
+            if (this._listIndexOffset <= 0)
             {
                 this._vboxIndexSelectedItem = -1;
                 return;
             }
 
             this._vboxIndexSelectedItem = 0;
-            this._itemListIndexRange[0]--;
-            this._itemListIndexRange[1]--;
-            this.updateItemsListText(this._itemListIndexRange);
+            this._listIndexOffset--;
+            this.updateItemsListText(this._listIndexOffset);
         }
 
         this.highlightSelectedItem();
@@ -106,20 +129,19 @@ public partial class MainMenuHandler : Node
     public void MoveSelectionDown()
     {
         this._vboxIndexSelectedItem++;
-        this._vboxIndexSelectedItem = Math.Clamp(this._vboxIndexSelectedItem, -1, UserData.Instance.BucketItems.Count - 1);
+        this._vboxIndexSelectedItem = Math.Clamp(this._vboxIndexSelectedItem, -1, this._currentItemsList.Count - 1);
         this.resetAllItemTextBoxesStyles();
 
-        if (this._vboxIndexSelectedItem >= this._itemList.GetChildCount())
+        if (this._vboxIndexSelectedItem >= this._itemListVbox.GetChildCount())
         {
-            this._vboxIndexSelectedItem = this._itemList.GetChildCount() - 1;
+            this._vboxIndexSelectedItem = this._itemListVbox.GetChildCount() - 1;
 
-            if (this._itemListIndexRange[1] + 1 <= UserData.Instance.BucketItems.Count)
+            if (this._listIndexOffset +  this._itemListVbox.GetChildCount() + 1 <= this._currentItemsList.Count)
             {
-                this._itemListIndexRange[0]++;
-                this._itemListIndexRange[1]++;
+                this._listIndexOffset++;
             }
 
-            this.updateItemsListText(this._itemListIndexRange);
+            this.updateItemsListText(this._listIndexOffset);
         }
 
         this.highlightSelectedItem();
@@ -138,33 +160,18 @@ public partial class MainMenuHandler : Node
     {
         UserData.Instance.BucketItems.Add(new BucketItem(titleText));
 
-        if (this._itemListIndexRange[1] < this._itemList.GetChildCount())
-        {
-            this._itemListIndexRange[1]++;
-            this.updateItemsListText(this._itemListIndexRange);
-        }
+        this.updateItemsListText(this._listIndexOffset);
     }
 
-    public void DeleteBucketItem(int listIndex)
+    public void DeleteBucketItem(int rootListIndex)
     {
-        UserData.Instance.BucketItems.RemoveAt(listIndex);
+        UserData.Instance.BucketItems.RemoveAt(rootListIndex);
         this.SyncChanges();
-
-        // if (this._itemListIndexRange[1] > UserData.Instance.BucketItems.Count)
-        // {
-        //     this._itemListIndexRange[1]--;
-        //     this.updateItemsListText(this._itemListIndexRange);
-
-        //     if (this._vboxIndexSelectedItem >= this._itemListIndexRange[1])
-        //     {
-        //         this.MoveSelectionUp();
-        //     }
-        // }
     }
 
-    public void UpdateBucketItemTitle(int listIndex, string text)
+    public void UpdateBucketItemTitle(int rootListIndex, string text)
     {
-        var bucketItem = UserData.Instance.BucketItems[listIndex];
+        var bucketItem = UserData.Instance.BucketItems[rootListIndex];
 
         bucketItem.UpdateItemData
         (
@@ -174,36 +181,37 @@ public partial class MainMenuHandler : Node
             done: bucketItem.Done
         );
 
-        this.updateItemsListText(this._itemListIndexRange);
+        this.updateItemsListText(this._listIndexOffset);
     }
 
-    private void updateItemsListText(int[] range)
+    private void updateItemsListText(int localListItemStartIndex)
     {
-        if (range.Length != 2) { throw new ArgumentException($"Invalid Range, Range Array must have exactly 2 numbers"); }
+        if (localListItemStartIndex < 0) { throw new IndexOutOfRangeException($"Invalid Starting Index (Negative Index): {localListItemStartIndex}"); }
+        if (localListItemStartIndex >= 0) { throw new IndexOutOfRangeException($"Invalid Starting Index (Out of Range): {localListItemStartIndex}"); }
 
-        int rangeDifference = range[1] - range[0];
-        if (rangeDifference > this._itemList.GetChildCount() || rangeDifference > UserData.Instance.BucketItems.Count || rangeDifference < 0)
-        {
-            throw new ArgumentException($"Invalid Range Values, Range Difference = {rangeDifference}");
-        }
-
-        foreach (TitleTextBox tb in _itemList.GetChildren().Cast<TitleTextBox>())
+        foreach (TitleTextBox tb in _itemListVbox.GetChildren().Cast<TitleTextBox>())
         {
             tb.updateText( string.Empty );
         }
 
+        if(this._currentItemsList.Count <= 0){ return; }
+
+
         int vboxIndexCounter = 0;
-        for (int i = range[0]; i < range[1]; i++)
+        //NOT inclusive
+        int maxIndex = Math.Min(localListItemStartIndex + this._itemListVbox.GetChildCount(), this._currentItemsList.Count);
+
+        for (int i = localListItemStartIndex; i < maxIndex; i++)
         {
-            var textBox = this._itemList.GetChild<TitleTextBox>(vboxIndexCounter);
-            textBox.updateText(UserData.Instance.BucketItems[i].Title);
+            var textBox = this._itemListVbox.GetChild<TitleTextBox>(vboxIndexCounter);
+            textBox.updateText(this._currentItemsList[i].Title);
             vboxIndexCounter++;
         }
     }
 
     private void resetAllItemTextBoxesStyles()
     {
-        foreach (TitleTextBox tb in _itemList.GetChildren().Cast<TitleTextBox>())
+        foreach (TitleTextBox tb in _itemListVbox.GetChildren().Cast<TitleTextBox>())
         {
             tb.resetBackgroundColor();
             tb.resetBorderColor();
@@ -215,7 +223,7 @@ public partial class MainMenuHandler : Node
     {
         if(this._vboxIndexSelectedItem <= -1){ return; }
 
-        var textBox = this._itemList.GetChild<TitleTextBox>(this._vboxIndexSelectedItem);
+        var textBox = this._itemListVbox.GetChild<TitleTextBox>(this._vboxIndexSelectedItem);
         textBox.changeBackgroundColor(Colors.White);
         textBox.changeTextColor(Colors.Black);
     }

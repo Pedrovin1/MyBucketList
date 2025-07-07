@@ -39,7 +39,7 @@ public partial class MainMenuManager : Node
             sceneRoot: this.GetOwner(),
 
             titleBox: _titleBox,
-            itemList: _itemList,
+            itemListVBox: _itemList,
             inputBox: _inputBox
         );
     }
@@ -91,7 +91,7 @@ public partial class MainMenuManager : Node
 
             viewport.SetInputAsHandled();
 
-            Main.Instance.EmitSignal(Main.SignalName.ChangeToItemDescriptionScene, this._handler.GetSelectedItemListIndex());
+            Main.Instance.EmitSignal(Main.SignalName.ChangeToItemDescriptionScene, this._handler.GetSelectedItem_RootListIndex());
             return;
         }
 
@@ -103,10 +103,10 @@ public partial class MainMenuManager : Node
             }
 
             if (this.currentMode == ActionModes.ItemCreation || this.currentMode == ActionModes.ItemEditing)
-                {
-                    this.currentMode = ActionModes.Scrolling;
-                    this._handler.DeactivateInputBox(wipeText: true);
-                }
+            {
+                this.currentMode = ActionModes.Scrolling;
+                this._handler.DeactivateInputBox(wipeText: true);
+            }
 
             viewport.SetInputAsHandled();
             return;
@@ -136,7 +136,7 @@ public partial class MainMenuManager : Node
 
         if (@event.IsActionReleased(nameof(EventNames.Delete)))
         {
-            int listIndex = this._handler.GetSelectedItemListIndex();
+            int listIndex = this._handler.GetSelectedItem_RootListIndex();
 
             if (this.currentMode != ActionModes.Scrolling || listIndex == -1)
             {
@@ -151,7 +151,7 @@ public partial class MainMenuManager : Node
 
         if (@event.IsActionReleased(nameof(EventNames.Q)))
         {
-            if (this.currentMode != ActionModes.Scrolling || this._handler.GetSelectedItemListIndex() == -1)
+            if (this.currentMode != ActionModes.Scrolling || this._handler.GetSelectedItem_RootListIndex() == -1)
             {
                 return;
             }
@@ -183,11 +183,13 @@ public partial class MainMenuManager : Node
             {
                 Main.Instance.EmitSignal(Main.SignalName.ChangeKeyInstructionsMenuVisibility, true);
                 viewport.SetInputAsHandled();
+                return;
             }
             if (@event.IsActionReleased(nameof(EventNames.E)))
             {
                 Main.Instance.EmitSignal(Main.SignalName.ChangeKeyInstructionsMenuVisibility, false);
                 viewport.SetInputAsHandled();
+                return;
             }
         }
     }
@@ -203,7 +205,7 @@ public partial class MainMenuManager : Node
             break;
 
             case ActionModes.ItemEditing:
-                int index = this._handler.GetSelectedItemListIndex();
+                int index = this._handler.GetSelectedItem_RootListIndex();
 
                 this._handler.UpdateBucketItemTitle(index, inputBoxText);
                 this._handler.DeactivateInputBox(wipeText:true);
