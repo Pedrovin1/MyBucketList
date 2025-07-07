@@ -63,9 +63,13 @@ public partial class MainMenuHandler : Node
 
     public void SyncChanges() //TODO: deal with null references of deleted items
     {
-        foreach (BucketItem item in this._currentItemsList)
+        //O(n²)
+        foreach (BucketItem item in this._currentItemsList.ToList())
         {
-            if (item is null){ this._currentItemsList.Remove(item); }
+            if (UserData.Instance.BucketItems.IndexOf(item) == -1)
+            {
+                this._currentItemsList.Remove(item);
+            }
         }
 
         if (this._currentItemsList.Count > this._itemListVbox.GetChildCount())
@@ -100,7 +104,6 @@ public partial class MainMenuHandler : Node
         int localListindex = this._vboxIndexSelectedItem + this._listIndexOffset;
         BucketItem selectedItem = this._currentItemsList[localListindex];
 
-        //might cause different reference errors
         return UserData.Instance.BucketItems.IndexOf(selectedItem); 
     }
 
@@ -187,7 +190,7 @@ public partial class MainMenuHandler : Node
     private void updateItemsListText(int localListItemStartIndex)
     {
         if (localListItemStartIndex < 0) { throw new IndexOutOfRangeException($"Invalid Starting Index (Negative Index): {localListItemStartIndex}"); }
-        if (localListItemStartIndex >= 0) { throw new IndexOutOfRangeException($"Invalid Starting Index (Out of Range): {localListItemStartIndex}"); }
+        if (localListItemStartIndex >= this._currentItemsList.Count) { throw new IndexOutOfRangeException($"Invalid Starting Index (Out of Range): {localListItemStartIndex}"); }
 
         foreach (TitleTextBox tb in _itemListVbox.GetChildren().Cast<TitleTextBox>())
         {
