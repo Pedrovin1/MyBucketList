@@ -1,5 +1,6 @@
 using CustomComponents;
 using Godot;
+using MyBucketList.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +17,12 @@ public partial class MainMenuHandler : Node
     private List<BucketItem> _currentItemsList;
     private int _listIndexOffset = 0; //startFromIndex
 
+    private List<Tuple<BucketFilters, object>> currentFilters = new();
+
     public MainMenuHandler(Node sceneRoot, TitleTextBox titleBox, VBoxContainer itemListVBox, InputTextBox inputBox)
     {
         this._currentItemsList = UserData.Instance.BucketItems.ToList();
-        
+
         this._sceneRoot = sceneRoot;
 
         this._titleBox = titleBox;
@@ -61,8 +64,12 @@ public partial class MainMenuHandler : Node
         this._inputBox.changeBorderColor(Colors.White);
     }
 
-    public void SyncChanges() //TODO: deal with null references of deleted items
+    public void SyncChanges()
     {
+
+        //TODO: Re-Filter Main List
+
+
         //O(n²)
         foreach (BucketItem item in this._currentItemsList.ToList())
         {
