@@ -1,5 +1,6 @@
 using CustomComponents;
 using Godot;
+using MyBucketList.Filters;
 using System;
 
 
@@ -129,8 +130,14 @@ public partial class MainMenuManager : Node
             return;
         }
 
-        if (@event.IsActionReleased(nameof(EventNames.Shift_Tab)))
+        if (@event.IsActionPressed(nameof(EventNames.Shift_Tab)))
         {
+            if(this.currentMode != ActionModes.Scrolling) { return; }
+            this.currentMode = ActionModes.TextSearch;
+
+            this._handler.ActivateInputBox();
+
+            viewport.SetInputAsHandled();
             return;
         }
 
@@ -201,6 +208,8 @@ public partial class MainMenuManager : Node
             case ActionModes.ItemCreation:
                 this._handler.AddBucketItem(inputBoxText);
                 this._handler.DeactivateInputBox(wipeText:true);
+
+                this._handler.SyncChanges();
                 this.currentMode = ActionModes.Scrolling;
             break;
 
@@ -209,6 +218,15 @@ public partial class MainMenuManager : Node
 
                 this._handler.UpdateBucketItemTitle(index, inputBoxText);
                 this._handler.DeactivateInputBox(wipeText:true);
+                this.currentMode = ActionModes.Scrolling;
+            break;
+
+            case ActionModes.TextSearch:
+
+                this._handler.AddFilter( (BucketFilters.Title, inputBoxText).ToTuple<BucketFilters, object>() );
+
+                this._handler.DeactivateInputBox(wipeText:true);
+                this._handler.SyncChanges();
                 this.currentMode = ActionModes.Scrolling;
             break;
 

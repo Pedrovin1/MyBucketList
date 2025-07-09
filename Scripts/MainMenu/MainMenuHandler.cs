@@ -17,7 +17,7 @@ public partial class MainMenuHandler : Node
     private List<BucketItem> _currentItemsList;
     private int _listIndexOffset = 0; //startFromIndex
 
-    private List<Tuple<BucketFilters, object>> currentFilters = new();
+    private Stack<Tuple<BucketFilters, object>> _currentFilters = new();
 
     public MainMenuHandler(Node sceneRoot, TitleTextBox titleBox, VBoxContainer itemListVBox, InputTextBox inputBox)
     {
@@ -43,7 +43,6 @@ public partial class MainMenuHandler : Node
     }
     private void onLocalListChanged()
     {
-        
         this.updateItemsListText(this._listIndexOffset);
 
         // for (int i = 0; i < Math.Clamp(UserData.Instance.BucketItems.Count, 0, this._itemListVbox.GetChildCount()); i++)
@@ -52,10 +51,20 @@ public partial class MainMenuHandler : Node
         // }
     }
 
-    public void ChangeItemsList(IEnumerable<BucketItem> newList)
+    public void AddFilter(Tuple<BucketFilters, object> filter)
     {
-        this._currentItemsList = newList.ToList();
-        this.onLocalListChanged();
+        this._currentFilters.Push(filter);
+    }
+
+    public void ResetFilters()
+    {
+        this._currentFilters = new();
+    }
+
+    public void PopFilter()
+    {
+        if (this._currentFilters.Count <= 0) { return; }
+        this._currentFilters.Pop();
     }
 
     private void inputBoxSetup()
@@ -67,30 +76,29 @@ public partial class MainMenuHandler : Node
     public void SyncChanges()
     {
 
-        //TODO: Re-Filter Main List
+        this._currentItemsList = BucketListFilter.ApplyFilters(UserData.Instance.BucketItems.ToList(), this._currentFilters.ToArray());
 
-
-        //O(n²)
-        foreach (BucketItem item in this._currentItemsList.ToList())
-        {
-            if (UserData.Instance.BucketItems.IndexOf(item) == -1)
-            {
-                this._currentItemsList.Remove(item);
-            }
-        }
+        // //O(n²)
+        // foreach (BucketItem item in this._currentItemsList.ToList())
+        // {
+        //     if (UserData.Instance.BucketItems.IndexOf(item) == -1)
+        //     {
+        //         this._currentItemsList.Remove(item);
+        //     }
+        // }
 
         if (this._currentItemsList.Count > this._itemListVbox.GetChildCount())
+        {
+            //it can probably be turned into an O(1) operation
+            while (this._listIndexOffset + this._itemListVbox.GetChildCount() > this._currentItemsList.Count)
             {
-                //it can probably be turned into an O(1) operation
-                while (this._listIndexOffset + this._itemListVbox.GetChildCount() > this._currentItemsList.Count)
-                {
-                    this._listIndexOffset--;
-                }
+                this._listIndexOffset--;
             }
-            else
-            {
-                this._listIndexOffset = 0;
-            }
+        }
+        else
+        {
+            this._listIndexOffset = 0;
+        }
         
 
         this._vboxIndexSelectedItem = Math.Clamp(this._vboxIndexSelectedItem, -1, this._currentItemsList.Count - 1);
