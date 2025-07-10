@@ -205,7 +205,7 @@ public partial class MainMenuHandler : Node
     private void updateItemsListText(int localListItemStartIndex)
     {
         if (localListItemStartIndex < 0) { throw new IndexOutOfRangeException($"Invalid Starting Index (Negative Index): {localListItemStartIndex}"); }
-        if (localListItemStartIndex >= this._currentItemsList.Count) { throw new IndexOutOfRangeException($"Invalid Starting Index (Out of Range): {localListItemStartIndex}"); }
+        if (localListItemStartIndex >= this._currentItemsList.Count && this._currentItemsList.Count != 0) { throw new IndexOutOfRangeException($"Invalid Starting Index (Out of Range): {localListItemStartIndex}"); }
 
         foreach (TitleTextBox tb in _itemListVbox.GetChildren().Cast<TitleTextBox>())
         {

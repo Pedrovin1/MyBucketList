@@ -1,5 +1,5 @@
 ^v     - Selecionar
 Tab    - Marcar Como Concluído
 Esc    - Sair/Cancelar
-Q      - Editar
+Espaço - Editar
 Delete - Deletar

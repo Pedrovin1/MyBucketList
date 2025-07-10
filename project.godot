@@ -21,8 +21,8 @@ UserData="*res://Scripts/Singletons/UserData.cs"
 
 [display]
 
-window/size/viewport_width=800
-window/size/viewport_height=500
+window/size/viewport_width=360
+window/size/viewport_height=350
 
 [dotnet]
 
