@@ -10,5 +10,6 @@ public enum EventNames
     Delete,
     Q,
     R,
-    E 
+    E,
+    Shift_F
 }

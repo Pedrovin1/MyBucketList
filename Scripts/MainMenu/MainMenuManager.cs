@@ -184,21 +184,31 @@ public partial class MainMenuManager : Node
             return;
         }
 
-        if (@event.IsAction(nameof(EventNames.E)))
+        if (@event.IsActionReleased(nameof(EventNames.Shift_F)))
         {
-            if (@event.IsActionPressed(nameof(EventNames.E)))
-            {
-                Main.Instance.EmitSignal(Main.SignalName.ChangeKeyInstructionsMenuVisibility, true);
-                viewport.SetInputAsHandled();
-                return;
-            }
-            if (@event.IsActionReleased(nameof(EventNames.E)))
-            {
-                Main.Instance.EmitSignal(Main.SignalName.ChangeKeyInstructionsMenuVisibility, false);
-                viewport.SetInputAsHandled();
-                return;
-            }
+            if (this.currentMode == ActionModes.ItemEditing) { return; }
+
+            this._handler.PopFilter();
+            this._handler.SyncChanges();
+            
+            viewport.SetInputAsHandled();
         }
+
+        if (@event.IsAction(nameof(EventNames.E)))
+            {
+                if (@event.IsActionPressed(nameof(EventNames.E)))
+                {
+                    Main.Instance.EmitSignal(Main.SignalName.ChangeKeyInstructionsMenuVisibility, true);
+                    viewport.SetInputAsHandled();
+                    return;
+                }
+                if (@event.IsActionReleased(nameof(EventNames.E)))
+                {
+                    Main.Instance.EmitSignal(Main.SignalName.ChangeKeyInstructionsMenuVisibility, false);
+                    viewport.SetInputAsHandled();
+                    return;
+                }
+            }
     }
 
     private void onTextSubmitted(string inputBoxText)
