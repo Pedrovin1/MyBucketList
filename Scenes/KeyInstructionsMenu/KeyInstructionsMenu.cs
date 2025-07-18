@@ -65,7 +65,7 @@ public partial class KeyInstructionsMenu : Node2D
             this._selectedLanguage + "/" +
             TextFileNames.ItemDescription;
 
-        string text = Godot.FileAccess.GetFileAsString(path);
+        string text = Godot.FileAccess.GetFileAsString( path );
 
         this._label.Text = string.Empty;
         this._label.AddText(text);

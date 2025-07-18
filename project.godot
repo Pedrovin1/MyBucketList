@@ -23,6 +23,7 @@ UserData="*res://Scripts/Singletons/UserData.cs"
 
 window/size/viewport_width=360
 window/size/viewport_height=350
+window/size/borderless=true
 
 [dotnet]
 
